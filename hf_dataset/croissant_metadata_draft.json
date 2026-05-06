@@ -12,9 +12,9 @@
   "conformsTo": "http://mlcommons.org/croissant/1.1",
   "dct:conformsTo": "http://mlcommons.org/croissant/RAI/1.0",
   "url": "https://huggingface.co/datasets/forseebench/forseebench",
-  "license": "TODO(author): final derived benchmark license or access terms",
-  "version": "TODO(author): release version",
-  "citation": "TODO(author): final anonymous ForSeeBench citation",
+  "license": "other",
+  "version": "anonymous-review",
+  "citation": "@misc{forseebench2026, title = {ForSeeBench: Prospective Audio-Description QA for Evaluating Accessible Movie Understanding}, author = {Anonymous Author(s)}, year = {2026}, note = {Anonymous benchmark submission artifact}}",
   "keywords": [
     "audio description",
     "question answering",
@@ -33,7 +33,7 @@
   "rai:personalSensitiveInformation": [
     "Raw media is not included.",
     "Derived text may contain fictional character names and movie scene descriptions.",
-    "TODO(author): complete final sensitive-information review."
+    "The artifact is intended for benchmark review and should not be treated as a source of personal or biometric information."
   ],
   "rai:dataUseCases": [
     "Intended use: evaluating multiple-choice prospective QA from prior AD context.",
@@ -41,14 +41,14 @@
     "Out-of-scope use: training on restricted source assets, raw media redistribution, accessibility certification, or high-stakes deployment."
   ],
   "rai:dataSocialImpact": "ForSeeBench supports evaluation of forward-relevant information in AD streams. Risks include overclaiming accessibility impact or using prospective QA accuracy as a substitute for blind/low-vision user studies.",
-  "rai:hasSyntheticData": "TODO(author): clarify because questions/options and validation metadata are Qwen-assisted while source AD text is derived from MAD/MAD-eval.",
+  "rai:hasSyntheticData": "Yes. Questions, answer options, distractors, and some validation metadata are Qwen-assisted; prior context and hidden target AD text are derived from MAD/MAD-eval audio-description data.",
   "prov:wasDerivedFrom": [
     {
       "@type": "sc:Dataset",
       "name": "MAD / MAD-eval",
       "citation": "Soldan et al., MAD: A Scalable Dataset for Language Grounding in Videos From Movie Audio Descriptions, CVPR 2022",
-      "url": "TODO(author): source dataset URL",
-      "license": "TODO(author): source license/access terms"
+      "url": "https://openaccess.thecvf.com/content/CVPR2022/html/Soldan_MAD_A_Scalable_Dataset_for_Language_Grounding_in_Videos_From_CVPR_2022_paper.html",
+      "license": "Original MAD/MAD-eval and underlying movie source assets remain governed by their original providers' terms and are not redistributed in this release."
     }
   ],
   "distribution": [

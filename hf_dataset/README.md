@@ -117,4 +117,4 @@ MAD / MAD-eval:
 
 ## License
 
-The dataset license is `TODO(author)`. Original source assets remain governed by their original providers' terms.
+The derived benchmark artifact is provided for anonymous review under access terms to be finalized before any public release. Original MAD/MAD-eval and underlying movie source assets remain governed by their original providers' terms and are not redistributed here.
