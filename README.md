@@ -156,20 +156,12 @@ python scripts/export_release_qna.py
 
 ## Repository Structure
 
+- `pyproject.toml`: editable install and minimal dependency metadata.
+- `configs/`: release-safe configuration templates.
 - `src/`: ForSeeBench package code.
 - `scripts/`: construction, export, validation, scoring, release, and upload helpers.
 - `hf_dataset/`: Hugging Face dataset card, schema, metadata draft, full Q/A files, and smoke-test files.
-- `docs/`: reviewer-facing documentation.
 - `tests/`: smoke tests and unit tests.
-- `paper/`: anonymized paper source.
-
-## Documentation
-
-- `docs/reviewer_quickstart.md`
-- `docs/dataset_construction.md`
-- `docs/evaluation_protocol.md`
-- `docs/source_data_redistribution_audit.md`
-- `docs/source_dataset_citations.md`
 
 ## Citation
 
@@ -211,7 +203,7 @@ The MAD-eval subset is part of the MAD source-data ecosystem and traces to movie
 }
 ```
 
-AutoAD, NarrAD, Qwen, and other source/model citation notes are tracked in `docs/source_dataset_citations.md`.
+The paper evaluates context sources and model components including human AD, NarrAD, AutoAD-Zero, and Qwen2.5-VL. This repository does not redistribute NarrAD outputs, AutoAD outputs, Qwen weights, or any raw source assets.
 
 ## License And Source Terms
 

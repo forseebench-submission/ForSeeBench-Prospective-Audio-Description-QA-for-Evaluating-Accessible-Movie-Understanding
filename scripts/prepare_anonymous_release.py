@@ -56,7 +56,6 @@ ALLOWED_DIRS = (
     "src",
     "scripts",
     "tests",
-    "docs",
 )
 ALLOWED_HF_FILES = (
     "hf_dataset/README.md",

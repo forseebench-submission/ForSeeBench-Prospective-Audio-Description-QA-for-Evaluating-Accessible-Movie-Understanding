@@ -25,22 +25,6 @@ class Check:
 CHECKS = (
     Check("Root README", ("README.md",)),
     Check(
-        "Reviewer docs",
-        (
-            "docs/reviewer_quickstart.md",
-            "docs/reproducibility.md",
-            "docs/dataset_construction.md",
-            "docs/evaluation_protocol.md",
-            "docs/benchmark_card.md",
-            "docs/anonymization.md",
-            "docs/source_data_redistribution_audit.md",
-            "docs/source_dataset_citations.md",
-            "docs/huggingface_release_plan.md",
-            "docs/license_decision.md",
-            "docs/release_commands.md",
-        ),
-    ),
-    Check(
         "Hugging Face release draft",
         (
             "hf_dataset/README.md",
@@ -262,12 +246,12 @@ def main() -> int:
             print(f"  note: {check.note}")
 
     failures += check_text_contains(
-        "docs/source_data_redistribution_audit.md",
-        ("raw videos are not redistributed", "must not be uploaded"),
+        "README.md",
+        ("raw movie videos", "not redistributed"),
         "Raw source exclusion",
     )
     failures += check_text_contains(
-        "docs/source_dataset_citations.md",
+        "README.md",
         ("mad", "qwen", "narrad", "autoad"),
         "Source citation coverage",
     )
