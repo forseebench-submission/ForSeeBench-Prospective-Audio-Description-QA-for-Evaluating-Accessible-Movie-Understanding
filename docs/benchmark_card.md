@@ -2,7 +2,9 @@
 
 ## Benchmark Summary
 
-ForSeeBench is a prospective audio-description QA benchmark. Each item asks a multiple-choice question about a hidden future AD target using only prior context.
+ForSeeBench is a prospective audio-description QA benchmark. It is motivated by a gap in accessibility evaluation: sighted movie viewers receive dense visual cues continuously, while blind and low-vision viewers depend on AD to access actions, bodies, expressions, scene changes, objects, and spatial updates that the soundtrack alone does not provide. Each item asks a multiple-choice question about a hidden future AD target using only prior context.
+
+The benchmark therefore asks whether AD carries forward-relevant narrative evidence, not just whether a model can caption or answer questions about an isolated visible scene.
 
 The implemented v1 artifact is derived from MAD/MAD-eval-style movie audio-description data. The release-facing artifact should contain derived Q/A benchmark records and metadata only.
 

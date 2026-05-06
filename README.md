@@ -7,9 +7,11 @@ This repository is an anonymous review artifact for a double-blind benchmark sub
 
 ## Overview
 
-Audio description (AD) helps blind and low-vision viewers access visual information in movies by narrating visual events that are not available from the soundtrack alone. Existing AD evaluation is often retrospective: it asks whether a description matches what has already happened.
+Sighted movie viewers receive dense visual cues continuously and without asking for them: actions, bodies, facial expressions, scene changes, object reveals, spatial layouts, and other visual updates all contribute to a viewer's mental model of the story. Blind and low-vision (BLV) viewers often depend on audio description (AD) for that information, because the soundtrack alone does not carry much of it.
 
-ForSeeBench evaluates a prospective ability instead. Each item gives prior AD context and a multiple-choice question about a withheld future human-written AD target. A system must choose the option that best matches the upcoming target, without seeing the target sentence during prediction. This tests whether an AD stream preserves forward-relevant evidence for the next salient visual update.
+Current automatic evaluation for video-language systems is usually framed as video captioning, video question answering, or general video understanding: describe the visible scene, answer a question about a clip, or recognize what is happening. Those tasks are useful, but they do not directly test whether an AD stream gives BLV viewers the kind of unfolding narrative evidence that sighted viewers receive from vision.
+
+ForSeeBench evaluates this forward-looking requirement. Each item gives prior AD context and a multiple-choice question about a withheld future human-written AD target. A system must choose the option that best matches the upcoming target, without seeing the target sentence during prediction. This tests whether an AD stream preserves forward-relevant evidence for the next salient visual update, rather than merely describing isolated scenes after the fact.
 
 The benchmark is instantiated from MAD-eval movie audio-description data and is released as an evaluation artifact, not a training corpus.
 
@@ -33,7 +35,7 @@ ForSeeBench has three artifact components:
 
 ## What The Benchmark Measures
 
-ForSeeBench measures prospective AD question answering. A model receives:
+ForSeeBench measures prospective AD question answering: whether prior descriptions support the same kind of story-model update that visual cues support for sighted viewers. A model receives:
 
 - prior AD context;
 - a question about the next hidden target;

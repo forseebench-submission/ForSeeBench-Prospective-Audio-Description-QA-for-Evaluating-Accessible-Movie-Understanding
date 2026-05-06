@@ -18,7 +18,9 @@ tags:
 
 ## Dataset Summary
 
-ForSeeBench is an evaluation benchmark for prospective audio-description question answering. Each item gives prior audio-description context and a multiple-choice question about a withheld future human-written AD target. The task is to choose the answer option that best matches the upcoming target, measuring whether the prior AD stream preserves evidence for the next salient visual update.
+ForSeeBench is an evaluation benchmark for prospective audio-description question answering. Sighted viewers receive dense visual cues continuously: actions, bodies, expressions, scene changes, objects, and spatial updates all help them build a mental model of a movie. Blind and low-vision viewers often depend on audio description (AD) for that information, because the soundtrack alone does not carry it.
+
+Each ForSeeBench item gives prior AD context and a multiple-choice question about a withheld future human-written AD target. The task is to choose the answer option that best matches the upcoming target, measuring whether the prior AD stream preserves evidence for the next salient visual update. This complements captioning, video QA, and general video-understanding evaluations, which often ask systems to describe or answer questions about visible content without directly testing whether AD supports the unfolding viewing experience.
 
 This is an anonymous review artifact for a double-blind benchmark submission. It is not a training corpus.
 
