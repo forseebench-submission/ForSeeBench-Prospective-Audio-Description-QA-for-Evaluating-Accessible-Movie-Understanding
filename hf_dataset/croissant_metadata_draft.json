@@ -1,0 +1,95 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "dct": "http://purl.org/dc/terms/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "sc": "https://schema.org/"
+  },
+  "@type": "sc:Dataset",
+  "name": "ForSeeBench",
+  "description": "Evaluation benchmark for prospective audio-description question answering. Public rows contain prior AD context, a question, and answer options. Answer-bearing rows add scoring labels and clean audit metadata.",
+  "conformsTo": "http://mlcommons.org/croissant/1.1",
+  "dct:conformsTo": "http://mlcommons.org/croissant/RAI/1.0",
+  "url": "https://huggingface.co/datasets/forseebench/forseebench",
+  "license": "TODO(author): final derived benchmark license or access terms",
+  "version": "TODO(author): release version",
+  "citation": "TODO(author): final anonymous ForSeeBench citation",
+  "keywords": [
+    "audio description",
+    "question answering",
+    "evaluation benchmark",
+    "prospective reasoning"
+  ],
+  "rai:dataLimitations": [
+    "ForSeeBench is an evaluation benchmark, not a training corpus.",
+    "The benchmark is derived from movie audio-description data and should not be interpreted as complete accessibility evaluation.",
+    "The release excludes raw movie videos, clips, audio tracks, subtitles, dialogue files, full MAD/MAD-eval assets, and restricted source assets."
+  ],
+  "rai:dataBiases": [
+    "The source domain is movie audio description and may reflect movie-domain, genre, casting, and description-style biases.",
+    "Automated Qwen-assisted filtering may favor examples with explicit textual evidence."
+  ],
+  "rai:personalSensitiveInformation": [
+    "Raw media is not included.",
+    "Derived text may contain fictional character names and movie scene descriptions.",
+    "TODO(author): complete final sensitive-information review."
+  ],
+  "rai:dataUseCases": [
+    "Intended use: evaluating multiple-choice prospective QA from prior AD context.",
+    "Intended use: comparing AD context sources and context policies under fixed Q/A items.",
+    "Out-of-scope use: training on restricted source assets, raw media redistribution, accessibility certification, or high-stakes deployment."
+  ],
+  "rai:dataSocialImpact": "ForSeeBench supports evaluation of forward-relevant information in AD streams. Risks include overclaiming accessibility impact or using prospective QA accuracy as a substitute for blind/low-vision user studies.",
+  "rai:hasSyntheticData": "TODO(author): clarify because questions/options and validation metadata are Qwen-assisted while source AD text is derived from MAD/MAD-eval.",
+  "prov:wasDerivedFrom": [
+    {
+      "@type": "sc:Dataset",
+      "name": "MAD / MAD-eval",
+      "citation": "Soldan et al., MAD: A Scalable Dataset for Language Grounding in Videos From Movie Audio Descriptions, CVPR 2022",
+      "url": "TODO(author): source dataset URL",
+      "license": "TODO(author): source license/access terms"
+    }
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "sample-public-jsonl",
+      "name": "sample_public.jsonl",
+      "contentUrl": "sample_data/sample_public.jsonl",
+      "encodingFormat": "application/jsonl"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "sample-with-answers-jsonl",
+      "name": "sample_with_answers.jsonl",
+      "contentUrl": "sample_data/sample_with_answers.jsonl",
+      "encodingFormat": "application/jsonl"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "schema-md",
+      "name": "schema.md",
+      "contentUrl": "schema.md",
+      "encodingFormat": "text/markdown"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "public_examples",
+      "name": "public_examples",
+      "description": "Public no-answer prospective QA examples for model prediction.",
+      "field": [
+        {"@type": "cr:Field", "@id": "id", "name": "id", "dataType": "sc:Text", "description": "Stable example identifier."},
+        {"@type": "cr:Field", "@id": "source_id", "name": "source_id", "dataType": "sc:Text", "description": "Release-safe source/movie identifier."},
+        {"@type": "cr:Field", "@id": "prior_context", "name": "prior_context", "dataType": "sc:Text", "description": "List of prior AD context objects."},
+        {"@type": "cr:Field", "@id": "question", "name": "question", "dataType": "sc:Text", "description": "Multiple-choice question."},
+        {"@type": "cr:Field", "@id": "options", "name": "options", "dataType": "sc:Text", "description": "Four answer options."},
+        {"@type": "cr:Field", "@id": "question_type", "name": "question_type", "dataType": "sc:Text", "description": "Controlled question type."},
+        {"@type": "cr:Field", "@id": "target_type", "name": "target_type", "dataType": "sc:Text", "description": "Controlled hidden-target type."},
+        {"@type": "cr:Field", "@id": "context_length", "name": "context_length", "dataType": "sc:Integer", "description": "Number of prior context clips."}
+      ]
+    }
+  ]
+}

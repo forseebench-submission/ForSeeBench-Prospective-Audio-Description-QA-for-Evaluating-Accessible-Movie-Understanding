@@ -1,0 +1,15 @@
+selection_mode: target_level_qwen_minimal_evidence
+max_prior_clips: 8
+stream_outputs: true
+candidate_window_sizes: null
+evidence_sufficiency_threshold: 0.7
+min_semantic_similarity_soft: 0.15
+use_timestamp_gap: true
+hard_reject_large_gap: false
+max_gap_seconds: 10
+qwen_for_all_candidates: false
+max_qwen_calls: null
+output_selected: data/interim/selected_context_windows.jsonl
+output_rejected: data/interim/rejected_context_windows.jsonl
+output_challenge: data/interim/challenge_context_windows.jsonl
+progress_output: data/interim/context_selection_progress.json

@@ -1,0 +1,22 @@
+pilot:
+  max_examples: 500
+  parse_limit: null
+  window_size: 3
+  extraction_limit: 2000
+  candidate_limit: 1000
+progress_output_extract_actions: data/interim/progress_extract_actions.json
+progress_output_generate_examples: data/interim/progress_generate_examples.json
+progress_output_validate_filter: data/interim/progress_validate_filter.json
+expectedness_main_min: 0.4
+expectedness_main_max: 0.8
+expectedness_too_easy_threshold: 0.8
+expectedness_too_hard_threshold: 0.4
+filter_by_expectedness: false
+validation_thresholds:
+  qwen_confidence: 0.7
+  evidence_sufficiency: 0.7
+  distractor_quality: 0.7
+split:
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1

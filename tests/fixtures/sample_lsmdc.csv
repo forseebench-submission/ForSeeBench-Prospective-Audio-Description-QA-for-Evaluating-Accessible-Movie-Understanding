@@ -1,0 +1,9 @@
+movie,clip_id,start,end,audio_description,dialogue
+MovieA,a1,0,2,A woman searches through her purse near the front door.,
+MovieA,a2,2,4,She pulls out a key and steps toward the lock.,
+MovieA,a3,4,6,She raises the key toward the door.,
+MovieA,a4,6,8,She unlocks the door and pushes it open.,
+MovieB,b1,0,2,A waiter walks toward the table carrying menus.,
+MovieB,b2,2,4,He stops beside the seated couple.,
+MovieB,b3,4,6,He holds out the menus with a smile.,
+MovieB,b4,6,8,He hands the menus to the couple.,
