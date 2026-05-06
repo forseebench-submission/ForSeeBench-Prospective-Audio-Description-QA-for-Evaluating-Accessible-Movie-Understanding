@@ -41,14 +41,6 @@ CHECKS = (
         ),
     ),
     Check(
-        "Sample data",
-        (
-            "hf_dataset/sample_data/sample_with_answers.jsonl",
-            "hf_dataset/sample_data/sample_public.jsonl",
-            "hf_dataset/sample_data/sample_predictions.jsonl",
-        ),
-    ),
-    Check(
         "Reviewer scripts",
         (
             "scripts/check_submission_ready.py",

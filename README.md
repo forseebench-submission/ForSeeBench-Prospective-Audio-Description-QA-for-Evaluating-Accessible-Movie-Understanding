@@ -92,15 +92,7 @@ hf_dataset/data/qna_with_answers.jsonl
 hf_dataset/schema.md
 ```
 
-Smoke-test files:
-
-```text
-hf_dataset/sample_data/sample_public.jsonl
-hf_dataset/sample_data/sample_with_answers.jsonl
-hf_dataset/sample_data/sample_predictions.jsonl
-```
-
-The full Q/A files contain 787 derived benchmark items. The sample files contain two rows for fast validation and evaluator checks.
+The Q/A files contain 787 derived benchmark items. `qna_test.jsonl` is the prediction file; `qna_with_answers.jsonl` is the scoring/reproducibility file. They are not train/validation/test splits.
 
 The Hugging Face Dataset artifact is:
 
@@ -140,12 +132,12 @@ Validate the full answer-bearing scoring file:
 python scripts/validate_dataset.py --input hf_dataset/data/qna_with_answers.jsonl --schema with_answers
 ```
 
-Score sample predictions:
+Score predictions:
 
 ```bash
 python scripts/evaluate_mcq.py \
-  --input hf_dataset/sample_data/sample_with_answers.jsonl \
-  --predictions hf_dataset/sample_data/sample_predictions.jsonl
+  --input hf_dataset/data/qna_with_answers.jsonl \
+  --predictions path/to/predictions.jsonl
 ```
 
 Create the full release-facing Q/A files from the internal processed benchmark artifact:
@@ -160,8 +152,8 @@ python scripts/export_release_qna.py
 - `configs/`: release-safe configuration templates.
 - `src/`: ForSeeBench package code.
 - `scripts/`: construction, export, validation, scoring, release, and upload helpers.
-- `hf_dataset/`: Hugging Face dataset card, schema, metadata draft, full Q/A files, and smoke-test files.
-- `tests/`: smoke tests and unit tests.
+- `hf_dataset/`: Hugging Face dataset card, schema, metadata draft, and full Q/A files.
+- `tests/`: validation, metric, CLI, and pipeline unit tests.
 
 ## Citation
 

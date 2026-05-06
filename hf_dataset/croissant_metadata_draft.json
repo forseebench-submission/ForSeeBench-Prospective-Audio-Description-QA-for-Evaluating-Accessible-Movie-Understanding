@@ -68,13 +68,6 @@
     },
     {
       "@type": "cr:FileObject",
-      "@id": "sample-with-answers-jsonl",
-      "name": "sample_with_answers.jsonl",
-      "contentUrl": "sample_data/sample_with_answers.jsonl",
-      "encodingFormat": "application/jsonl"
-    },
-    {
-      "@type": "cr:FileObject",
       "@id": "schema-md",
       "name": "schema.md",
       "contentUrl": "schema.md",

@@ -65,7 +65,6 @@ ALLOWED_HF_FILES = (
 )
 ALLOWED_HF_DIRS = (
     "hf_dataset/data",
-    "hf_dataset/sample_data",
 )
 ALLOWED_AGENT_FILES = (
     "agent/submission_readiness_audit.md",

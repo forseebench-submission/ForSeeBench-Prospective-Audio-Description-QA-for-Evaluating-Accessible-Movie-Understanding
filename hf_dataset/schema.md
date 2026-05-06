@@ -8,7 +8,6 @@ File:
 
 ```text
 data/qna_test.jsonl
-sample_data/sample_public.jsonl
 ```
 
 Required fields:
@@ -40,7 +39,6 @@ File:
 
 ```text
 data/qna_with_answers.jsonl
-sample_data/sample_with_answers.jsonl
 ```
 
 Required fields:
@@ -54,19 +52,6 @@ Optional scoring/audit fields:
 - `hidden_target_ad`: withheld target AD sentence, if legally safe for release;
 - `evidence`: list of clean evidence objects with `clip_id` and `span`, if legally safe.
 - `distractor_metadata`: optional distractor type labels, if useful for audit.
-
-## Prediction Rows
-
-File:
-
-```text
-sample_data/sample_predictions.jsonl
-```
-
-Required fields:
-
-- `id`
-- `prediction`: integer selected option index.
 
 ## Source Assets
 

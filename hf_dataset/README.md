@@ -33,18 +33,20 @@ This is an anonymous review artifact for a double-blind benchmark submission. It
 | Source | MAD/MAD-eval audio-description data |
 | Raw media redistributed | No |
 
-## Dataset Files
+## Data
 
-- `data/qna_test.jsonl`: public no-answer Q/A file for model prediction.
-- `data/qna_with_answers.jsonl`: answer-bearing scoring file for evaluation and reproducibility.
-- `sample_data/sample_public.jsonl`: two-row no-answer sample for smoke tests.
-- `sample_data/sample_with_answers.jsonl`: two-row answer-bearing sample for smoke tests.
-- `sample_data/sample_predictions.jsonl`: sample predictions for evaluator smoke tests.
-- `schema.md`: field definitions.
+The dataset contains two JSONL files:
 
-The full Q/A files contain 787 derived benchmark items. The sample files are included only to make validation and scoring checks fast.
+- `data/qna_test.jsonl`: the public no-answer benchmark file for model prediction.
+- `data/qna_with_answers.jsonl`: the answer-bearing scoring file for evaluation and reproducibility.
 
-These files are benchmark artifacts, not training or model-development splits. `qna_test.jsonl` is the prediction input file, and `qna_with_answers.jsonl` is the scoring/reproducibility file.
+Both files contain the same 787 ForSeeBench items. `qna_test.jsonl` contains the inputs a system should see. `qna_with_answers.jsonl` adds the answer key and clean audit fields used for scoring. These are benchmark files, not dataset splits.
+
+For code, validation scripts, scoring scripts, and construction utilities, see the anonymous GitHub artifact:
+
+```text
+https://github.com/forseebench-submission/ForSeeBench-Prospective-Audio-Description-QA-for-Evaluating-Accessible-Movie-Understanding
+```
 
 ## Source Data
 

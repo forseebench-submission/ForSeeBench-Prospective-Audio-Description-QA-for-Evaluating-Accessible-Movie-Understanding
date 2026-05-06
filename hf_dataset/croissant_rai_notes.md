@@ -54,7 +54,7 @@ The draft uses conservative review-stage values for fields that are not yet fina
 
 ## Validation Steps
 
-1. Upload final derived Q/A files to the anonymous Hugging Face Dataset repository. The current full files are `data/qna_test.jsonl` and `data/qna_with_answers.jsonl`; sample files are retained only for smoke tests.
+1. Upload final derived Q/A files to the anonymous Hugging Face Dataset repository. The hosted files are `data/qna_test.jsonl` and `data/qna_with_answers.jsonl`.
 2. Confirm the Dataset Viewer can read the JSONL files.
 3. Retrieve Croissant:
 

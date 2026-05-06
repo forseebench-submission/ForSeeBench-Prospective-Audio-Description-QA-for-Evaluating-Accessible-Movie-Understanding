@@ -8,13 +8,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_validate_dataset_public_sample_cli() -> None:
+def test_validate_dataset_public_qna_cli() -> None:
     result = subprocess.run(
         [
             sys.executable,
             "scripts/validate_dataset.py",
             "--input",
-            "hf_dataset/sample_data/sample_public.jsonl",
+            "hf_dataset/data/qna_test.jsonl",
             "--schema",
             "public",
         ],
@@ -29,13 +29,13 @@ def test_validate_dataset_public_sample_cli() -> None:
     assert "public schema" in result.stdout
 
 
-def test_validate_dataset_with_answers_sample_cli() -> None:
+def test_validate_dataset_with_answers_qna_cli() -> None:
     result = subprocess.run(
         [
             sys.executable,
             "scripts/validate_dataset.py",
             "--input",
-            "hf_dataset/sample_data/sample_with_answers.jsonl",
+            "hf_dataset/data/qna_with_answers.jsonl",
             "--schema",
             "with_answers",
         ],
@@ -72,7 +72,7 @@ def test_validate_dataset_full_qna_cli() -> None:
 
 def test_validate_dataset_missing_file_error() -> None:
     result = subprocess.run(
-        [sys.executable, "scripts/validate_dataset.py", "--input", "hf_dataset/sample_data/does_not_exist.jsonl"],
+        [sys.executable, "scripts/validate_dataset.py", "--input", "hf_dataset/data/does_not_exist.jsonl"],
         cwd=ROOT,
         text=True,
         capture_output=True,
