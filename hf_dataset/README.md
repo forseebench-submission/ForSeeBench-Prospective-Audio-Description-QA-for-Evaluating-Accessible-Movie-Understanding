@@ -22,6 +22,15 @@ ForSeeBench is an evaluation benchmark for prospective audio-description questio
 
 This is an anonymous review artifact for a double-blind benchmark submission. It is not a training corpus.
 
+| Property | Value |
+| --- | --- |
+| Task | Multiple-choice prospective audio-description QA |
+| Size | 787 Q/A items |
+| Language | English |
+| Modality | Text derived from movie audio descriptions |
+| Source | MAD/MAD-eval audio-description data |
+| Raw media redistributed | No |
+
 ## Dataset Files
 
 - `data/qna_test.jsonl`: public no-answer Q/A file for model prediction.
@@ -32,6 +41,8 @@ This is an anonymous review artifact for a double-blind benchmark submission. It
 - `schema.md`: field definitions.
 
 The full Q/A files contain 787 derived benchmark items. The sample files are included only to make validation and scoring checks fast.
+
+These files are benchmark artifacts, not training or model-development splits. `qna_test.jsonl` is the prediction input file, and `qna_with_answers.jsonl` is the scoring/reproducibility file.
 
 ## Source Data
 

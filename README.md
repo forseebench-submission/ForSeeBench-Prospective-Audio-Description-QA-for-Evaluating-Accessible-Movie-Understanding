@@ -1,5 +1,8 @@
 # ForSeeBench: Prospective Audio-Description QA for Evaluating Accessible Movie Understanding
 
+[![Dataset](https://img.shields.io/badge/Hugging%20Face-Dataset-ffcc00)](https://huggingface.co/datasets/forseebench/forseebench)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](pyproject.toml)
+
 This repository is an anonymous review artifact for a double-blind benchmark submission.
 
 ## Overview
@@ -9,6 +12,24 @@ Audio description (AD) helps blind and low-vision viewers access visual informat
 ForSeeBench evaluates a prospective ability instead. Each item gives prior AD context and a multiple-choice question about a withheld future human-written AD target. A system must choose the option that best matches the upcoming target, without seeing the target sentence during prediction. This tests whether an AD stream preserves forward-relevant evidence for the next salient visual update.
 
 The benchmark is instantiated from MAD-eval movie audio-description data and is released as an evaluation artifact, not a training corpus.
+
+## Benchmark Components
+
+ForSeeBench has three artifact components:
+
+1. **Benchmark data**: 787 derived Q/A items released as a public no-answer prediction file and an answer-bearing scoring file.
+2. **Construction pipeline**: scripts for parsing ordered AD clips, selecting future targets and prior evidence, generating Q/A items, and exporting release files.
+3. **Evaluation tools**: schema validation, multiple-choice scoring, and scripts for the no-context, fixed-context, adaptive-context, and PrediCC analyses used in the paper.
+
+| Property | Value |
+| --- | --- |
+| Task | Multiple-choice prospective audio-description QA |
+| Size | 787 Q/A items |
+| Language | English |
+| Modality | Text derived from movie audio descriptions |
+| Source | MAD/MAD-eval audio-description data |
+| Main files | `qna_test.jsonl`, `qna_with_answers.jsonl` |
+| Raw media redistributed | No |
 
 ## What The Benchmark Measures
 
@@ -98,11 +119,10 @@ The validation and scoring scripts use the Python standard library plus this rep
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-export PYTHONPATH="$PWD/src"
-python -m pip install pytest
+python -m pip install -e ".[dev]"
 ```
 
-TODO(author): add a pinned dependency file for full construction and model-based evaluation.
+Full model-based construction/evaluation may require additional model dependencies and access credentials; see the relevant script help text and configuration files.
 
 ## Quickstart
 

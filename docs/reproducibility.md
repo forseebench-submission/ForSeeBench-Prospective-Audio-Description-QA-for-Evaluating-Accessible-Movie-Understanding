@@ -5,7 +5,7 @@ ForSeeBench is an evaluation benchmark, not a training corpus. Reproducibility i
 ## Smoke-Test Reproducibility
 
 ```bash
-export PYTHONPATH="$PWD/src"
+python -m pip install -e ".[dev]"
 python scripts/validate_dataset.py --input hf_dataset/sample_data/sample_public.jsonl --schema public
 python scripts/validate_dataset.py --input hf_dataset/sample_data/sample_with_answers.jsonl --schema with_answers
 python scripts/evaluate_mcq.py \

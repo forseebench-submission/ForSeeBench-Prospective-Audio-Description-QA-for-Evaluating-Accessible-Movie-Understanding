@@ -9,13 +9,7 @@ Run from the repository root.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-export PYTHONPATH="$PWD/src"
-```
-
-Optional test dependency:
-
-```bash
-python -m pip install pytest
+python -m pip install -e ".[dev]"
 ```
 
 ## Validate The Public No-Answer Benchmark File

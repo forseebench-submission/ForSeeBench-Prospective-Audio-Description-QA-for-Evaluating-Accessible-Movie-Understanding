@@ -5,6 +5,7 @@ These commands are for the author to run manually. They do not include real toke
 ## Local Checks
 
 ```bash
+python -m pip install -e ".[dev]"
 python scripts/check_anonymization.py
 python scripts/check_submission_ready.py
 python scripts/validate_dataset.py --input hf_dataset/data/qna_test.jsonl --schema public
