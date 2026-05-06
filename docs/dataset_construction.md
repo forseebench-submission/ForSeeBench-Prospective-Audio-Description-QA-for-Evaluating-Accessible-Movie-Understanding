@@ -31,10 +31,16 @@ python scripts/07_export_dataset_card.py --help
 
 ## Release Rows
 
-The paper-facing release avoids train/validation/test terminology unless a future paper revision defines an official split policy. The intended full release is:
+The paper-facing release avoids train/validation/test terminology unless a future paper revision defines an official split policy. The current release-facing Q/A files are:
 
-- `forseebench_public.jsonl`: public no-answer examples for model prediction;
-- `forseebench_with_answers.jsonl`: answer-bearing examples for scoring and reproducibility.
+- `hf_dataset/data/qna_test.jsonl`: public no-answer examples for model prediction;
+- `hf_dataset/data/qna_with_answers.jsonl`: answer-bearing examples for scoring and reproducibility.
+
+They are exported from `data/processed/all_movies/eval_all10.jsonl` with:
+
+```bash
+python scripts/export_release_qna.py
+```
 
 Public rows include prior context, question, options, question type, target type, context length, and release-safe source identifiers. Answer-bearing rows add answer keys and clean audit fields such as hidden target AD and evidence metadata when legally safe.
 

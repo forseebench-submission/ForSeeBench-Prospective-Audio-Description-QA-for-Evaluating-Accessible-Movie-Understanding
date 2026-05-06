@@ -65,6 +65,7 @@ ALLOWED_HF_FILES = (
     "hf_dataset/croissant_metadata_draft.json",
 )
 ALLOWED_HF_DIRS = (
+    "hf_dataset/data",
     "hf_dataset/sample_data",
 )
 ALLOWED_AGENT_FILES = (

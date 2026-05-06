@@ -22,7 +22,7 @@ from forseebench.utils.schema import (
 )
 
 
-DEFAULT_INPUT = "hf_dataset/sample_data/sample_with_answers.jsonl"
+DEFAULT_INPUT = "hf_dataset/data/qna_with_answers.jsonl"
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:

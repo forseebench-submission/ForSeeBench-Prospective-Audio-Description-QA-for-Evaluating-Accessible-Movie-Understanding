@@ -2,7 +2,7 @@
 
 ForSeeBench is an evaluation benchmark, not a training corpus. Reproducibility is organized around fixed public inputs, prediction files, and an answer-bearing scoring file.
 
-## Sample Reproducibility
+## Smoke-Test Reproducibility
 
 ```bash
 export PYTHONPATH="$PWD/src"
@@ -17,11 +17,11 @@ This path runs on CPU in a few seconds and requires no raw videos, source assets
 
 ## Full Benchmark Evaluation
 
-Expected final HF files:
+Full HF files:
 
 ```text
-data/forseebench_public.jsonl
-data/forseebench_with_answers.jsonl
+data/qna_test.jsonl
+data/qna_with_answers.jsonl
 ```
 
 External systems should produce predictions against the public no-answer file:
@@ -34,8 +34,14 @@ Scoring uses the answer-bearing file:
 
 ```bash
 python scripts/evaluate_mcq.py \
-  --input data/forseebench_with_answers.jsonl \
+  --input hf_dataset/data/qna_with_answers.jsonl \
   --predictions predictions.jsonl
+```
+
+The release-facing files can be regenerated locally from the processed internal benchmark file:
+
+```bash
+python scripts/export_release_qna.py
 ```
 
 ## Optional Reconstruction

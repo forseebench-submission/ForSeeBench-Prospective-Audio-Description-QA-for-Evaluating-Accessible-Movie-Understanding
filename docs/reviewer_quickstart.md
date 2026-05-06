@@ -1,6 +1,6 @@
 # Reviewer Quickstart
 
-This quickstart uses only derived sample Q/A JSONL files under `hf_dataset/sample_data/`. It does not require raw movie videos, movie clips, audio, subtitles, full MAD/MAD-eval assets, private paths, GPUs, or Qwen.
+This quickstart uses only derived Q/A JSONL files. It does not require raw movie videos, movie clips, audio, subtitles, full MAD/MAD-eval assets, private paths, GPUs, or Qwen.
 
 Run from the repository root.
 
@@ -18,28 +18,28 @@ Optional test dependency:
 python -m pip install pytest
 ```
 
-## Validate The Public No-Answer Sample
+## Validate The Public No-Answer Benchmark File
 
 ```bash
-python scripts/validate_dataset.py --input hf_dataset/sample_data/sample_public.jsonl --schema public
+python scripts/validate_dataset.py --input hf_dataset/data/qna_test.jsonl --schema public
 ```
 
 Expected output:
 
 ```text
-PASS hf_dataset/sample_data/sample_public.jsonl: 2 rows validated as public schema
+PASS hf_dataset/data/qna_test.jsonl: 787 rows validated as public schema
 ```
 
-## Validate The Answer-Bearing Sample
+## Validate The Answer-Bearing Scoring File
 
 ```bash
-python scripts/validate_dataset.py --input hf_dataset/sample_data/sample_with_answers.jsonl --schema with_answers
+python scripts/validate_dataset.py --input hf_dataset/data/qna_with_answers.jsonl --schema with_answers
 ```
 
 Expected output:
 
 ```text
-PASS hf_dataset/sample_data/sample_with_answers.jsonl: 2 rows validated as with_answers schema
+PASS hf_dataset/data/qna_with_answers.jsonl: 787 rows validated as with_answers schema
 ```
 
 ## Run Sample Scoring
@@ -54,6 +54,21 @@ Expected output is JSON with keys such as `accuracy`, `num_examples`, `num_predi
 
 The sample predictions are only a smoke test. They are not a reported baseline.
 
+## Regenerate The Release Q/A Files
+
+The release-facing Q/A files are derived from the internal processed benchmark artifact:
+
+```bash
+python scripts/export_release_qna.py
+```
+
+Expected output:
+
+```text
+Wrote 787 rows to hf_dataset/data/qna_test.jsonl
+Wrote 787 rows to hf_dataset/data/qna_with_answers.jsonl
+```
+
 ## Release Checks
 
 ```bash
@@ -65,9 +80,7 @@ Warnings from the anonymization checker are informational; they identify files t
 
 ## Full Benchmark
 
-The full benchmark should be hosted on Hugging Face as:
+The full benchmark is represented as:
 
-- `data/forseebench_public.jsonl`: public no-answer file for prediction;
-- `data/forseebench_with_answers.jsonl`: answer-bearing scoring file.
-
-Full files are not fabricated in this repository. They should be added only after the author confirms source-field redistribution rights.
+- `data/qna_test.jsonl`: public no-answer file for prediction;
+- `data/qna_with_answers.jsonl`: answer-bearing scoring file.

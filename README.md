@@ -1,101 +1,157 @@
-# ForSeeBench
+# ForSeeBench: Prospective Audio-Description QA for Evaluating Accessible Movie Understanding
 
-ForSeeBench is an evaluation benchmark for prospective audio-description question answering. A model receives prior movie audio-description (AD) context and a multiple-choice question about a withheld future AD target; scoring checks whether the model selects the answer grounded in the hidden target.
+This repository is an anonymous review artifact for a double-blind benchmark submission.
 
-This repository is an anonymous review artifact for a double-blind conference submission. It contains code, scripts, configs, tests, documentation, and tiny sample Q/A files. It is not a training-data release and should not contain author identity, private paths, raw media, or restricted source assets.
+## Overview
 
-## Artifact Targets
+Audio description (AD) helps blind and low-vision viewers access visual information in movies by narrating visual events that are not available from the soundtrack alone. Existing AD evaluation is often retrospective: it asks whether a description matches what has already happened.
 
-- GitHub code artifact: `https://github.com/forseebench-submission/ForSeeBench-Prospective-Audio-Description-QA-for-Evaluating-Accessible-Movie-Understanding.git`
-- Hugging Face Dataset artifact: `https://huggingface.co/datasets/forseebench/forseebench`
-- Optional Hugging Face Space artifact: `forseebench/forseebench-reviewer-demo`
+ForSeeBench evaluates a prospective ability instead. Each item gives prior AD context and a multiple-choice question about a withheld future human-written AD target. A system must choose the option that best matches the upcoming target, without seeing the target sentence during prediction. This tests whether an AD stream preserves forward-relevant evidence for the next salient visual update.
 
-## Release Representation
+The benchmark is instantiated from MAD-eval movie audio-description data and is released as an evaluation artifact, not a training corpus.
 
-ForSeeBench is released as an evaluation benchmark rather than a training corpus. The intended Hugging Face layout is:
+## What The Benchmark Measures
+
+ForSeeBench measures prospective AD question answering. A model receives:
+
+- prior AD context;
+- a question about the next hidden target;
+- four answer options;
+- release-safe diagnostic metadata such as question type, target type, and context length.
+
+The main release has two full Q/A files:
+
+- `hf_dataset/data/qna_test.jsonl`: public no-answer benchmark questions for model prediction;
+- `hf_dataset/data/qna_with_answers.jsonl`: answer-bearing scoring file for evaluation and reproducibility.
+
+This separation supports no-context baselines, adaptive selected-context evaluation, fixed-window context evaluation, and PrediCC-style context contribution analysis. In the paper, PrediCC@k compares accuracy with the last `k` prior AD clips against the no-context condition.
+
+## Dataset Source And Boundary
+
+ForSeeBench is derived from MAD/MAD-eval audio-description data. The released files contain derived Q/A benchmark artifacts and metadata only.
+
+Raw movie videos, movie clips, audio tracks, subtitles, dialogue files, full MAD/MAD-eval source assets, and other restricted source assets are not redistributed. Users who need source assets must obtain them from the original providers under their own terms.
+
+The Q/A files include derived benchmark text and release-safe identifiers needed to run the benchmark. They do not include raw media, local paths, credentials, prompt logs, or full source datasets.
+
+## Benchmark Construction
+
+The paper instantiates ForSeeBench on 10 MAD-eval movies and the current release contains 787 Q/A items. Construction proceeds over temporally ordered AD clips:
+
+1. Ordered MAD-eval AD clips are converted into bounded search regions.
+2. A future human-written AD target is selected and withheld.
+3. Strictly prior AD context is selected as evidence.
+4. Qwen-assisted generation converts the target/context pair into a four-option question.
+5. Typed distractors are generated to separate the correct target-grounded answer from already-happened, unsupported, or contradictory alternatives.
+6. Validation filters remove trivial, unsupported, leakage-prone, or malformed examples.
+
+The result is a multiple-choice evaluation benchmark: models answer questions from prior AD context, and scoring is performed against the answer-bearing file.
+
+## Evaluation In The Paper
+
+The paper evaluates the 787-item benchmark with a Qwen2.5-VL text-only answerer. It compares:
+
+- no-context answering;
+- adaptive selected-context answering;
+- fixed-window contexts with `k in {0, 1, 2, 4, 8}`;
+- context sources including human AD, NarrAD, and AutoAD-Zero;
+- PrediCC@k context contribution relative to no-context accuracy.
+
+This repository provides the validation and scoring interface for the released Q/A files. Full model-running commands depend on the author’s final environment and model-access decisions.
+
+## Released Files
+
+Primary benchmark files:
 
 ```text
-data/forseebench_public.jsonl          # no answers, for model prediction
-data/forseebench_with_answers.jsonl    # answer-bearing scoring file
-sample_data/sample_public.jsonl
-sample_data/sample_with_answers.jsonl
-sample_data/sample_predictions.jsonl
-schema.md
+hf_dataset/data/qna_test.jsonl
+hf_dataset/data/qna_with_answers.jsonl
+hf_dataset/schema.md
 ```
 
-The current repository includes sample files and metadata. Full benchmark files should be added only after final field-level redistribution review.
+Smoke-test files:
 
-## Source Data Boundary
+```text
+hf_dataset/sample_data/sample_public.jsonl
+hf_dataset/sample_data/sample_with_answers.jsonl
+hf_dataset/sample_data/sample_predictions.jsonl
+```
 
-ForSeeBench is derived from MAD/MAD-eval audio-description data. Raw movie videos, movie clips, audio tracks, subtitles, dialogue files, full MAD/MAD-eval source assets, and other restricted source assets are not redistributed. Users who need source assets must obtain them from the original providers under their own terms.
+The full Q/A files contain 787 derived benchmark items. The sample files contain two rows for fast validation and evaluator checks.
 
-## Repository Contents
+The Hugging Face Dataset artifact is:
 
-- `src/forseebench/`: parsing, construction, schema validation, and evaluation helpers.
-- `scripts/`: construction, evaluation, validation, anonymization, release-prep, and HF upload utilities.
-- `hf_dataset/`: Hugging Face dataset card, sample Q/A files, schema, Croissant/RAI notes, and metadata draft.
-- `docs/`: reviewer-facing documentation and release policy notes.
-- `tests/`: lightweight unit and smoke tests.
-- `paper/`: active anonymized paper source.
-- `agent/`: audit and readiness reports.
+```text
+https://huggingface.co/datasets/forseebench/forseebench
+```
+
+The anonymous GitHub code artifact is:
+
+```text
+https://github.com/forseebench-submission/ForSeeBench-Prospective-Audio-Description-QA-for-Evaluating-Accessible-Movie-Understanding.git
+```
 
 ## Installation
 
-Sample validation and generic MCQ scoring use the Python standard library plus this repository's `src` package.
+The validation and scoring scripts use the Python standard library plus this repository's `src` package.
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 export PYTHONPATH="$PWD/src"
-```
-
-For tests:
-
-```bash
 python -m pip install pytest
-pytest
 ```
 
-TODO(author): add a complete dependency file for full construction and Qwen-based evaluation.
+TODO(author): add a pinned dependency file for full construction and model-based evaluation.
 
-## Reviewer Quickstart
+## Quickstart
+
+Validate the full public no-answer Q/A file:
 
 ```bash
-python scripts/check_anonymization.py
-python scripts/check_submission_ready.py
-python scripts/validate_dataset.py --input hf_dataset/sample_data/sample_public.jsonl --schema public
-python scripts/validate_dataset.py --input hf_dataset/sample_data/sample_with_answers.jsonl --schema with_answers
+python scripts/validate_dataset.py --input hf_dataset/data/qna_test.jsonl --schema public
+```
+
+Validate the full answer-bearing scoring file:
+
+```bash
+python scripts/validate_dataset.py --input hf_dataset/data/qna_with_answers.jsonl --schema with_answers
+```
+
+Score sample predictions:
+
+```bash
 python scripts/evaluate_mcq.py \
   --input hf_dataset/sample_data/sample_with_answers.jsonl \
   --predictions hf_dataset/sample_data/sample_predictions.jsonl
 ```
 
-These commands use derived Q/A JSONL only. They do not require raw videos, clips, audio, subtitles, restricted MAD/MAD-eval assets, GPUs, or Qwen.
-
-## Evaluation
-
-Prediction rows are JSONL objects:
-
-```json
-{"id": "example-id", "prediction": 0}
-```
-
-Scoring command:
+Create the full release-facing Q/A files from the internal processed benchmark artifact:
 
 ```bash
-python scripts/evaluate_mcq.py \
-  --input <forseebench_with_answers.jsonl> \
-  --predictions <prediction_rows.jsonl>
+python scripts/export_release_qna.py
 ```
 
-Generated-AD and PrediCC-style analysis scripts are also present, but require full artifacts and Qwen setup:
+## Repository Structure
 
-```bash
-python scripts/evaluate_autoad_mcq.py --help
-python scripts/evaluate_predicc.py --help
-```
+- `src/`: ForSeeBench package code.
+- `scripts/`: construction, export, validation, scoring, release, and upload helpers.
+- `hf_dataset/`: Hugging Face dataset card, schema, metadata draft, full Q/A files, and smoke-test files.
+- `docs/`: reviewer-facing documentation.
+- `tests/`: smoke tests and unit tests.
+- `paper/`: anonymized paper source.
+
+## Documentation
+
+- `docs/reviewer_quickstart.md`
+- `docs/dataset_construction.md`
+- `docs/evaluation_protocol.md`
+- `docs/source_data_redistribution_audit.md`
+- `docs/source_dataset_citations.md`
 
 ## Citation
+
+ForSeeBench:
 
 ```bibtex
 @misc{forseebench2026,
@@ -106,6 +162,37 @@ python scripts/evaluate_predicc.py --help
 }
 ```
 
-## License
+MAD / MAD-eval source data:
 
-TODO(author): add final code license and derived benchmark license or access terms. Original source assets remain governed by their original providers' terms.
+```bibtex
+@inproceedings{soldan2022mad,
+  author = {Soldan, Mattia and Pardo, Alejandro and Alc{\'a}zar, Juan Le{\'o}n and Caba Heilbron, Fabian and Zhao, Chen and Giancola, Silvio and Ghanem, Bernard},
+  title = {{MAD}: A Scalable Dataset for Language Grounding in Videos from Movie Audio Descriptions},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages = {5026--5035},
+  year = {2022}
+}
+```
+
+The MAD-eval subset is part of the MAD source-data ecosystem and traces to movie audio-description resources. If using or citing LSMDC/Movie Description lineage directly, also cite:
+
+```bibtex
+@article{rohrbach2017movie,
+  author = {Rohrbach, Anna and Torabi, Atousa and Rohrbach, Marcus and Tandon, Niket and Pal, Christopher and Larochelle, Hugo and Courville, Aaron and Schiele, Bernt},
+  title = {Movie Description},
+  journal = {International Journal of Computer Vision},
+  volume = {123},
+  number = {1},
+  pages = {94--120},
+  year = {2017},
+  doi = {10.1007/s11263-016-0987-1}
+}
+```
+
+AutoAD, NarrAD, Qwen, and other source/model citation notes are tracked in `docs/source_dataset_citations.md`.
+
+## License And Source Terms
+
+TODO(author): finalize the code license and derived benchmark license or access terms.
+
+Original MAD/MAD-eval and underlying movie source assets remain governed by their original providers' terms. This repository does not redistribute those raw source assets.

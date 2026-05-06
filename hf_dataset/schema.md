@@ -1,13 +1,13 @@
 # ForSeeBench Release Schema
 
-ForSeeBench is released as an evaluation benchmark rather than a training corpus. The intended full release has one public no-answer file for prediction and one answer-bearing file for scoring/reproducibility.
+ForSeeBench is released as an evaluation benchmark rather than a training corpus. The full release has one public no-answer Q/A file for prediction and one answer-bearing Q/A file for scoring/reproducibility.
 
 ## Public / No-Answer Rows
 
 File:
 
 ```text
-data/forseebench_public.jsonl
+data/qna_test.jsonl
 sample_data/sample_public.jsonl
 ```
 
@@ -39,7 +39,7 @@ Forbidden in public/no-answer rows:
 File:
 
 ```text
-data/forseebench_with_answers.jsonl
+data/qna_with_answers.jsonl
 sample_data/sample_with_answers.jsonl
 ```
 
@@ -53,6 +53,7 @@ Optional scoring/audit fields:
 
 - `hidden_target_ad`: withheld target AD sentence, if legally safe for release;
 - `evidence`: list of clean evidence objects with `clip_id` and `span`, if legally safe.
+- `distractor_metadata`: optional distractor type labels, if useful for audit.
 
 ## Prediction Rows
 

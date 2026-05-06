@@ -50,6 +50,13 @@ CHECKS = (
         ),
     ),
     Check(
+        "Full Q/A release files",
+        (
+            "hf_dataset/data/qna_test.jsonl",
+            "hf_dataset/data/qna_with_answers.jsonl",
+        ),
+    ),
+    Check(
         "Sample data",
         (
             "hf_dataset/sample_data/sample_with_answers.jsonl",
@@ -228,6 +235,11 @@ def check_hf_card() -> int:
         print("PASS HF card benchmark framing: evaluation-only framing found.")
     else:
         print("PARTIAL HF card benchmark framing: evaluation-only framing missing or weak.")
+        failures += 1
+    if "qna_test.jsonl" in text and "qna_with_answers.jsonl" in text:
+        print("PASS HF card Q/A file names: primary Q/A files are documented.")
+    else:
+        print("PARTIAL HF card Q/A file names: qna_test/qna_with_answers are not clearly documented.")
         failures += 1
     return failures
 

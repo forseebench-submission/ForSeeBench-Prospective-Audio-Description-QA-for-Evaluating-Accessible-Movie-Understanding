@@ -7,8 +7,9 @@ These commands are for the author to run manually. They do not include real toke
 ```bash
 python scripts/check_anonymization.py
 python scripts/check_submission_ready.py
-python scripts/validate_dataset.py --input hf_dataset/sample_data/sample_public.jsonl --schema public
-python scripts/validate_dataset.py --input hf_dataset/sample_data/sample_with_answers.jsonl --schema with_answers
+python scripts/validate_dataset.py --input hf_dataset/data/qna_test.jsonl --schema public
+python scripts/validate_dataset.py --input hf_dataset/data/qna_with_answers.jsonl --schema with_answers
+python scripts/evaluate_mcq.py --input hf_dataset/sample_data/sample_with_answers.jsonl --predictions hf_dataset/sample_data/sample_predictions.jsonl
 pytest
 ```
 

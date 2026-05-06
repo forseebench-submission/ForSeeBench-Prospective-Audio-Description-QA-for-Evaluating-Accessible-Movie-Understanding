@@ -57,7 +57,7 @@ The draft intentionally uses `TODO(author)` placeholders for unresolved facts.
 
 ## Validation Steps
 
-1. Upload final derived Q/A files to the anonymous Hugging Face Dataset repository. The intended full files are `data/forseebench_public.jsonl` and `data/forseebench_with_answers.jsonl`; sample files alone are sufficient only for staging.
+1. Upload final derived Q/A files to the anonymous Hugging Face Dataset repository. The current full files are `data/qna_test.jsonl` and `data/qna_with_answers.jsonl`; sample files are retained only for smoke tests.
 2. Confirm the Dataset Viewer can read the JSONL files.
 3. Retrieve Croissant:
 

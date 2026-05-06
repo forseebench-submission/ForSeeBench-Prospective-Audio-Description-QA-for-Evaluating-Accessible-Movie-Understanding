@@ -39,3 +39,10 @@ TODO(author): confirm release status for source/movie identifiers, clip ids, pri
 ## GitHub Policy
 
 GitHub may include code, configs safe for release, docs, tests, schema examples, and tiny sample Q/A files. GitHub must exclude raw assets, local paths, `.env`/secrets, old git history, author identity, caches, build artifacts, `node_modules`, and private outputs.
+
+For this artifact, GitHub and Hugging Face may also include the full derived Q/A benchmark files after field-level review:
+
+- `hf_dataset/data/qna_test.jsonl`
+- `hf_dataset/data/qna_with_answers.jsonl`
+
+These files are derived benchmark artifacts, not raw MAD/MAD-eval source assets. They must still be reviewed for source-field license terms before any public non-review release.

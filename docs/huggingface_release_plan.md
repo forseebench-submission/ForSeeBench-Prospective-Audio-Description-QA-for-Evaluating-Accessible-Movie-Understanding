@@ -12,15 +12,15 @@ schema.md
 croissant_rai_notes.md
 croissant_metadata_draft.json
 data/
-  forseebench_public.jsonl
-  forseebench_with_answers.jsonl
+  qna_test.jsonl
+  qna_with_answers.jsonl
 sample_data/
   sample_public.jsonl
   sample_with_answers.jsonl
   sample_predictions.jsonl
 ```
 
-`data/forseebench_public.jsonl` is the no-answer file for model prediction. `data/forseebench_with_answers.jsonl` is the answer-bearing scoring file for reproducibility. Full `data/` files should be added only after source-field redistribution review.
+`data/qna_test.jsonl` is the public no-answer file for model prediction. `data/qna_with_answers.jsonl` is the answer-bearing scoring file for reproducibility. The current files contain 787 derived Q/A items exported from the processed benchmark artifact.
 
 ## Do Not Upload
 

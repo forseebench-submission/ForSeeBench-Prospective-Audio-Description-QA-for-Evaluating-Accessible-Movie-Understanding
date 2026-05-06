@@ -8,15 +8,17 @@ Primary source for movie audio-description examples.
 
 ```bibtex
 @inproceedings{soldan2022mad,
-  title = {MAD: A Scalable Dataset for Language Grounding in Videos From Movie Audio Descriptions},
-  author = {Soldan, Mattia and Pardo, Alejandro and Alc{\'a}zar, Juan Le{\'o}n and Caba, Fabian and Zhao, Chen and Giancola, Silvio and Ghanem, Bernard},
+  author = {Soldan, Mattia and Pardo, Alejandro and Alc{\'a}zar, Juan Le{\'o}n and Caba Heilbron, Fabian and Zhao, Chen and Giancola, Silvio and Ghanem, Bernard},
+  title = {{MAD}: A Scalable Dataset for Language Grounding in Videos from Movie Audio Descriptions},
   booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages = {5026--5035},
   year = {2022}
 }
 ```
 
 - Paper citation present: yes, as `soldan2022mad`.
-- URL/license/access terms: TODO(author).
+- URL: `https://openaccess.thecvf.com/content/CVPR2022/html/Soldan_MAD_A_Scalable_Dataset_for_Language_Grounding_in_Videos_From_CVPR_2022_paper.html`
+- License/access terms for source assets: TODO(author).
 - Redistribution: raw/full MAD/MAD-eval assets must not be redistributed. Derived AD text fields require source-field confirmation.
 
 ## LSMDC / Movie Description

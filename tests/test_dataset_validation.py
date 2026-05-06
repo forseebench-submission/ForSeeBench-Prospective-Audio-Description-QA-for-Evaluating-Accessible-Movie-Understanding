@@ -50,6 +50,26 @@ def test_validate_dataset_with_answers_sample_cli() -> None:
     assert "with_answers schema" in result.stdout
 
 
+def test_validate_dataset_full_qna_cli() -> None:
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/validate_dataset.py",
+            "--input",
+            "hf_dataset/data/qna_test.jsonl",
+            "--schema",
+            "public",
+        ],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert "787 rows" in result.stdout
+
+
 def test_validate_dataset_missing_file_error() -> None:
     result = subprocess.run(
         [sys.executable, "scripts/validate_dataset.py", "--input", "hf_dataset/sample_data/does_not_exist.jsonl"],

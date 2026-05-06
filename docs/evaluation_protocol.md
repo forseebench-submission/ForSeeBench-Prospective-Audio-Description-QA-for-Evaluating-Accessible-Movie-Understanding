@@ -6,8 +6,8 @@ ForSeeBench evaluates prospective audio-description question answering. A system
 
 ## Files
 
-- Public/no-answer file: `forseebench_public.jsonl`
-- Answer-bearing/scoring file: `forseebench_with_answers.jsonl`
+- Public/no-answer file: `hf_dataset/data/qna_test.jsonl`
+- Answer-bearing/scoring file: `hf_dataset/data/qna_with_answers.jsonl`
 - Prediction file: JSONL rows with `id` and `prediction`
 
 The benchmark is not framed as train/validation/test splits.
@@ -42,6 +42,14 @@ Answer-bearing rows add:
 `scripts/evaluate_mcq.py` computes exact multiple-choice accuracy. Missing predictions count as incorrect.
 
 Sample command:
+
+```bash
+python scripts/evaluate_mcq.py \
+  --input hf_dataset/data/qna_with_answers.jsonl \
+  --predictions path/to/predictions.jsonl
+```
+
+Smoke-test command:
 
 ```bash
 python scripts/evaluate_mcq.py \

@@ -54,9 +54,16 @@
   "distribution": [
     {
       "@type": "cr:FileObject",
-      "@id": "sample-public-jsonl",
-      "name": "sample_public.jsonl",
-      "contentUrl": "sample_data/sample_public.jsonl",
+      "@id": "qna-test-jsonl",
+      "name": "qna_test.jsonl",
+      "contentUrl": "data/qna_test.jsonl",
+      "encodingFormat": "application/jsonl"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "qna-with-answers-jsonl",
+      "name": "qna_with_answers.jsonl",
+      "contentUrl": "data/qna_with_answers.jsonl",
       "encodingFormat": "application/jsonl"
     },
     {
