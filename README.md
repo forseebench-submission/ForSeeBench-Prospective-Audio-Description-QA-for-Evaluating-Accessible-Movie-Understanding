@@ -223,43 +223,6 @@ The MAD-eval subset is part of the MAD source-data ecosystem and traces to movie
 
 The paper evaluates context sources and model components including human AD, NarrAD, AutoAD-Zero, and Qwen2.5-VL. This repository does not redistribute NarrAD outputs, AutoAD outputs, Qwen weights, or any raw source assets.
 
-## Croissant Metadata And Hosting
-
-NeurIPS E&D submissions require an accessible dataset URL and a Croissant metadata file with core and minimal Responsible AI fields. This repository includes:
-
-```text
-hf_dataset/croissant.json
-```
-
-The file describes the two JSONL files, release schema, included figures, source restrictions, synthetic Q/A generation, intended uses, limitations, and provenance. Run the repository sanity checks before uploading:
-
-```bash
-python scripts/validate_dataset.py --input hf_dataset/data/qna_test.jsonl --schema public
-python scripts/validate_dataset.py --input hf_dataset/data/qna_with_answers.jsonl --schema with_answers
-python scripts/validate_croissant_metadata.py --input hf_dataset/croissant.json
-```
-
-Preview the Hugging Face upload payload:
-
-```bash
-python scripts/upload_hf_dataset.py \
-  --repo-id forseebench/forseebench \
-  --folder hf_dataset \
-  --private true \
-  --dry-run
-```
-
-Upload after setting `HF_TOKEN`:
-
-```bash
-HF_TOKEN=<your-token> python scripts/upload_hf_dataset.py \
-  --repo-id forseebench/forseebench \
-  --folder hf_dataset \
-  --private true
-```
-
-After upload, also run the official Croissant validator required by the submission system on `hf_dataset/croissant.json` or on the Hugging Face-generated Croissant file, then upload the validated Croissant file to OpenReview.
-
 ## License And Source Terms
 
 For anonymous review, the derived ForSeeBench benchmark files and code are provided for paper review, reproducibility checking, and non-commercial research evaluation. Do not redistribute raw source assets, attempt to reconstruct restricted movie media, or use the artifact for deployment or accessibility-certification claims.
