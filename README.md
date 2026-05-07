@@ -47,7 +47,7 @@ The main release has two full Q/A files:
 - `hf_dataset/data/qna_test.jsonl`: public no-answer benchmark questions for model prediction;
 - `hf_dataset/data/qna_with_answers.jsonl`: answer-bearing scoring file for evaluation and reproducibility.
 
-This separation supports no-context baselines, adaptive selected-context evaluation, fixed-window context evaluation, and PrediCC-style context contribution analysis. In the paper, PrediCC@k compares accuracy with the last `k` prior AD clips against the no-context condition.
+This separation supports no-context baselines, adaptive selected-context evaluation, fixed-window context evaluation, and PrediCC-style context contribution analysis. In the paper, PrediCC@k compares accuracy with the last `k` prior AD clips against a shared source-neutral no-context condition.
 
 ## Dataset Source And Boundary
 
@@ -68,6 +68,8 @@ The paper instantiates ForSeeBench on 10 MAD-eval movies and the current release
 5. Typed distractors are generated to separate the correct target-grounded answer from already-happened, unsupported, or contradictory alternatives.
 6. Validation filters remove trivial, unsupported, leakage-prone, or malformed examples.
 
+The main benchmark remains the 787-item file. The optional audit at `data/audits/verbatim_target_options/` lists cases where an answer option exactly matches the hidden target AD for manual paraphrasing review; those examples are not removed from the benchmark by default.
+
 The result is a multiple-choice evaluation benchmark: models answer questions from prior AD context, and scoring is performed against the answer-bearing file.
 
 ## Evaluation In The Paper
@@ -78,9 +80,33 @@ The paper evaluates the 787-item benchmark with a Qwen2.5-VL text-only answerer.
 - adaptive selected-context answering;
 - fixed-window contexts with `k in {0, 1, 2, 4, 8}`;
 - context sources including human AD, NarrAD, and AutoAD-Zero;
-- PrediCC@k context contribution relative to no-context accuracy.
+- PrediCC@k context contribution relative to the shared source-neutral no-context accuracy.
 
-This repository provides the validation and scoring interface for the released Q/A files. Full model-running commands depend on the author’s final environment and model-access decisions.
+This repository provides the validation and scoring interface for the released Q/A files. Full model-running commands depend on the author’s final environment and model-access decisions. The paper appendix documents the exact Qwen2.5-VL construction and answerer prompts used by the implementation.
+
+Reproduce the fixed-window PrediCC run when Qwen2.5-VL and the AD-source CSV are available:
+
+```bash
+python scripts/evaluate_predicc.py \
+  --dataset data/processed/all_movies/eval_all10.jsonl \
+  --results-csv Results.csv \
+  --output-dir outputs/evaluation/predicc/all_10_movies_run_fixed_k0 \
+  --ad-columns ground_truth NarrAD AutoAD-Zero \
+  --context-lengths 0,1,2,4,8 \
+  --parsed-sequences-dir data/interim/per_movie \
+  --batch-size 32 \
+  --max-tokens 128
+```
+
+Regenerate the context-scaling figure from a completed PrediCC run:
+
+```bash
+python scripts/figures/make_context_scaling.py \
+  --summary outputs/evaluation/predicc/all_10_movies_run_fixed_k0/predicc_summary.json \
+  --csv figures/context_scaling_data.csv \
+  --pdf figures/context_scaling.pdf \
+  --png figures/context_scaling.png
+```
 
 ## Released Files
 
@@ -152,7 +178,7 @@ python scripts/export_release_qna.py
 - `configs/`: release-safe configuration templates.
 - `src/`: ForSeeBench package code.
 - `scripts/`: construction, export, validation, scoring, release, and upload helpers.
-- `hf_dataset/`: Hugging Face dataset card, schema, metadata draft, and full Q/A files.
+- `hf_dataset/`: Hugging Face dataset card, schema, Croissant metadata, figures, and full Q/A files.
 - `tests/`: validation, metric, CLI, and pipeline unit tests.
 
 ## Citation
@@ -197,8 +223,47 @@ The MAD-eval subset is part of the MAD source-data ecosystem and traces to movie
 
 The paper evaluates context sources and model components including human AD, NarrAD, AutoAD-Zero, and Qwen2.5-VL. This repository does not redistribute NarrAD outputs, AutoAD outputs, Qwen weights, or any raw source assets.
 
+## Croissant Metadata And Hosting
+
+NeurIPS E&D submissions require an accessible dataset URL and a Croissant metadata file with core and minimal Responsible AI fields. This repository includes:
+
+```text
+hf_dataset/croissant.json
+```
+
+The file describes the two JSONL files, release schema, included figures, source restrictions, synthetic Q/A generation, intended uses, limitations, and provenance. Run the repository sanity checks before uploading:
+
+```bash
+python scripts/validate_dataset.py --input hf_dataset/data/qna_test.jsonl --schema public
+python scripts/validate_dataset.py --input hf_dataset/data/qna_with_answers.jsonl --schema with_answers
+python scripts/validate_croissant_metadata.py --input hf_dataset/croissant.json
+```
+
+Preview the Hugging Face upload payload:
+
+```bash
+python scripts/upload_hf_dataset.py \
+  --repo-id forseebench/forseebench \
+  --folder hf_dataset \
+  --private true \
+  --dry-run
+```
+
+Upload after setting `HF_TOKEN`:
+
+```bash
+HF_TOKEN=<your-token> python scripts/upload_hf_dataset.py \
+  --repo-id forseebench/forseebench \
+  --folder hf_dataset \
+  --private true
+```
+
+After upload, also run the official Croissant validator required by the submission system on `hf_dataset/croissant.json` or on the Hugging Face-generated Croissant file, then upload the validated Croissant file to OpenReview.
+
 ## License And Source Terms
 
-TODO(author): finalize the code license and derived benchmark license or access terms.
+For anonymous review, the derived ForSeeBench benchmark files and code are provided for paper review, reproducibility checking, and non-commercial research evaluation. Do not redistribute raw source assets, attempt to reconstruct restricted movie media, or use the artifact for deployment or accessibility-certification claims.
 
 Original MAD/MAD-eval and underlying movie source assets remain governed by their original providers' terms. This repository does not redistribute those raw source assets.
+
+See `LICENSE.md` for the review access terms included with this artifact.

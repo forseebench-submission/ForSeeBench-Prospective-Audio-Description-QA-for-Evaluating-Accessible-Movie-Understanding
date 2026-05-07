@@ -16,7 +16,7 @@ Required fields:
 - `source_id`: movie/source identifier, included only if release-safe.
 - `prior_context`: list of prior context objects. Each object has `clip_id` and `text`.
 - `question`: multiple-choice question about the hidden future AD target.
-- `options`: list of exactly four answer options.
+- `options`: list of exactly four answer options generated from the hidden target and distractor constraints.
 - `question_type`: controlled question type.
 - `target_type`: controlled target type.
 - `context_length`: number of prior context clips.
@@ -52,6 +52,8 @@ Optional scoring/audit fields:
 - `hidden_target_ad`: withheld target AD sentence, if legally safe for release;
 - `evidence`: list of clean evidence objects with `clip_id` and `span`, if legally safe.
 - `distractor_metadata`: optional distractor type labels, if useful for audit.
+
+The hidden target AD is not evaluation context. Because this is a multiple-choice QA benchmark, answer options are target-grounded generated choices; repository audits may separately flag options that exactly match the hidden target AD for optional manual paraphrasing review.
 
 ## Source Assets
 

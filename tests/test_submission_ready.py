@@ -19,6 +19,6 @@ def test_submission_ready_checker_runs() -> None:
 
     assert result.returncode == 0
     assert "Root README" in result.stdout
-    assert "Hugging Face release draft" in result.stdout
+    assert "Hugging Face release files" in result.stdout
     assert "Raw media scan" in result.stdout
     assert "HF card split framing" in result.stdout

@@ -42,6 +42,15 @@ The dataset contains two JSONL files:
 
 Both files contain the same 787 ForSeeBench items. `qna_test.jsonl` contains the inputs a system should see. `qna_with_answers.jsonl` adds the answer key and clean audit fields used for scoring. These are benchmark files, not dataset splits.
 
+The main benchmark size is 787 examples. A separate repository audit may list answer options that exactly match the hidden target AD for optional manual paraphrasing review; that audit is not a separate split and does not remove examples from the main benchmark by default.
+
+## Figures
+
+The release includes two paper figures for reviewers and dataset users:
+
+- `assets/teaser.png`: overview of the prospective AD-QA task, showing that the model answers from prior AD while the future Target AD remains withheld.
+- `assets/data_pipeline.png`: construction pipeline diagram, showing source AD streams, construction-time target/evidence selection, question generation, filtering, and release files.
+
 For code, validation scripts, scoring scripts, and construction utilities, see the anonymous GitHub artifact:
 
 ```text
@@ -86,6 +95,24 @@ python scripts/evaluate_mcq.py \
 
 The evaluator reports multiple-choice accuracy, missing predictions, number correct, and label distributions.
 
+For the fixed-window PrediCC evaluation in the paper code, `k=0` is a source-neutral no-context prompt containing only the question and shuffled answer options. That shared `Acc@0` baseline is reused when computing PrediCC@k for different AD sources. The hidden target AD is not supplied as evaluation context; answer options are generated from the hidden target in the multiple-choice QA construction.
+
+## Croissant And Responsible AI Metadata
+
+This release includes a Croissant metadata file with core and minimal Responsible AI fields:
+
+```text
+croissant.json
+```
+
+It documents the hosted JSONL resources, figures, record schemas, source-data restrictions, synthetic Q/A generation, intended uses, limitations, social-impact considerations, and provenance. The repository also includes a lightweight pre-upload checker:
+
+```bash
+python scripts/validate_croissant_metadata.py --input hf_dataset/croissant.json
+```
+
+The official Croissant validator specified by the conference submission system should also be run on the hosted metadata before OpenReview submission.
+
 ## Intended Use And Limits
 
 ForSeeBench is intended for evaluating prospective QA from prior AD context and comparing context policies or AD sources under fixed questions and options. It should not be used as a training corpus unless a future release explicitly defines such a protocol.
@@ -119,4 +146,8 @@ MAD / MAD-eval:
 
 ## License
 
-The derived benchmark artifact is provided for anonymous review under access terms to be finalized before any public release. Original MAD/MAD-eval and underlying movie source assets remain governed by their original providers' terms and are not redistributed here.
+For anonymous review, the derived ForSeeBench benchmark files and included figures are provided for paper review, reproducibility checking, and non-commercial research evaluation. Do not redistribute raw source assets, attempt to reconstruct restricted movie media, or use the artifact for deployment or accessibility-certification claims.
+
+Original MAD/MAD-eval and underlying movie source assets remain governed by their original providers' terms and are not redistributed here.
+
+See `LICENSE.md` for the review access terms included with this dataset artifact.

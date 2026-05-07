@@ -1,0 +1,542 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "dct": "http://purl.org/dc/terms/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "sc": "https://schema.org/",
+    "prov": "http://www.w3.org/ns/prov#"
+  },
+  "@type": "sc:Dataset",
+  "name": "ForSeeBench",
+  "alternateName": "ForSeeBench: Prospective Audio-Description QA for Evaluating Accessible Movie Understanding",
+  "description": "Evaluation benchmark for prospective audio-description (AD) question answering. Each item gives prior AD context, a four-option multiple-choice question, and a withheld future human-written AD target. The task tests whether prior AD preserves evidence that supports inference about the next narrated visual update. Public rows omit the answer key; answer-bearing rows add scoring labels and clean audit metadata. The benchmark is derived from MAD-eval audio descriptions and contains 787 items across 10 movies. The release also includes the paper teaser and construction-pipeline figures. This release is an evaluation benchmark and is not intended as a training corpus.",
+  "conformsTo": "http://mlcommons.org/croissant/1.1",
+  "dct:conformsTo": "http://mlcommons.org/croissant/RAI/1.0",
+  "url": "https://huggingface.co/datasets/forseebench/forseebench",
+  "license": "https://huggingface.co/datasets/forseebench/forseebench/blob/main/LICENSE.md",
+  "sc:license": "https://huggingface.co/datasets/forseebench/forseebench/blob/main/LICENSE.md",
+  "version": "0.1.0-anonymous",
+  "datePublished": "2026-05-07",
+  "citation": "@misc{forseebench2026, title = {ForSeeBench: Prospective Audio-Description QA for Evaluating Accessible Movie Understanding}, author = {Anonymous Author(s)}, year = {2026}, howpublished = {NeurIPS 2026 Datasets and Benchmarks (under review)}, note = {Anonymous benchmark submission artifact}}",
+  "keywords": [
+    "audio description",
+    "accessibility",
+    "blind and low-vision",
+    "prospective question answering",
+    "video understanding",
+    "multiple-choice QA",
+    "evaluation benchmark"
+  ],
+  "creator": {
+    "@type": "Organization",
+    "name": "Anonymous (NeurIPS 2026 ED submission)"
+  },
+  "rai:dataLimitations": [
+    "ForSeeBench is an evaluation benchmark, not a training corpus.",
+    "The benchmark is derived from movie audio-description data and should not be interpreted as complete accessibility evaluation; it does not measure overall accessibility quality, viewer satisfaction, or BLV comprehension, which require user-centered studies.",
+    "The release excludes raw movie videos, clips, audio tracks, subtitles, dialogue files, full MAD/MAD-eval assets, and other restricted source assets; users who need source assets must obtain them from the original providers under their own terms.",
+    "The benchmark targets prospective inference of the next human-narrated AD update, not long-horizon forecasting or full-scene planning."
+  ],
+  "rai:dataBiases": [
+    "The source domain is professional movie audio description and may reflect movie-domain, genre, casting, and description-style biases.",
+    "Automated Qwen2.5-VL-assisted target/context selection and validation may favor examples whose textual evidence is explicit; visually salient but linguistically implicit cues are systematically harder to retain.",
+    "The 10 MAD-eval movies are not a uniform sample of cinema; results may not generalize to all film genres, languages, or AD styles."
+  ],
+  "rai:personalSensitiveInformation": [
+    "Raw media is not redistributed.",
+    "Derived text contains fictional character names and movie scene descriptions; no real-person personal or biometric information is included by construction.",
+    "The artifact is intended for benchmark review and should not be treated as a source of personal or biometric information."
+  ],
+  "rai:dataUseCases": [
+    "Intended use: evaluating multiple-choice prospective QA from prior AD context.",
+    "Intended use: comparing AD context sources (Human MAD-eval AD, NarrAD, AutoAD-Zero) and context policies (no-context, fixed-window, adaptive) under fixed Q/A items.",
+    "Intended use: research on forward relevance of AD streams for accessibility-oriented video understanding.",
+    "Out-of-scope use: training on restricted source assets, raw media redistribution, accessibility certification, replacing user studies, or high-stakes deployment."
+  ],
+  "rai:dataSocialImpact": "ForSeeBench supports evaluation of forward-relevant information in AD streams, with the goal of motivating AD systems that better serve blind and low-vision viewers. Risks include overclaiming accessibility impact or treating prospective QA accuracy as a substitute for blind/low-vision user studies. The benchmark deliberately excludes raw media to limit redistribution and surveillance risks.",
+  "rai:hasSyntheticData": true,
+  "rai:dataCollection": "Source AD sentences are drawn from the 10-movie MAD-eval split. For each movie, ordered AD segments are converted into overlapping 10-clip search regions. Qwen2.5-VL-7B-Instruct selects a hidden future target and supporting strictly-prior evidence clips, generates one four-option multiple-choice question with three typed distractors, and re-evaluates each candidate at validation time against three thresholds: Qwen confidence >= 0.7, evidence sufficiency >= 0.7, and distractor quality >= 0.7. Rejections are logged with inspectable reasons. ForSeeBench construction does not require manual writing of every item, although it derives from human-written MAD/MAD-eval AD.",
+  "rai:dataAnnotationProtocol": "Benchmark annotations are produced by Qwen2.5-VL-7B-Instruct under strict-JSON prompts with stage-specific decoding settings. Selection, target extraction, evidence identification, and validation use temperature 0.1; question/answer-option generation uses temperature 0.4; the evaluation answerer uses temperature 0.0. Top-p is 0.8 and max_tokens is 2048 for construction stages unless overridden by the corresponding script. The exact prompts are reproduced in the paper appendix and in src/forseebench/qwen/prompts.py or the evaluation prompt builders.",
+  "rai:dataAnnotationPlatform": "Local Hugging Face / vLLM inference of Qwen/Qwen2.5-VL-7B-Instruct on a single-node GPU host. No third-party annotation platform was used.",
+  "rai:annotationsPerItem": "One Qwen-generated annotation pass per benchmark item. Each item must additionally pass an independent Qwen-based validation pass (confidence, evidence sufficiency, distractor quality) before being retained.",
+  "rai:dataPreprocessingProtocol": "MAD-eval AD sentences are loaded as ordered c_1, ..., c_n per movie and converted into overlapping 10-clip candidate regions. The construction pipeline selects a hidden future target y and evidence from strictly prior clips i < y, validates evidence sufficiency and distractor quality, exports an answer-free public JSONL file and a matching answer-bearing scoring JSONL file, and keeps raw media/source assets out of the release.",
+  "rai:dataReleaseMaintenancePlan": "Versioned releases are tagged on the Hugging Face dataset repository. Errata, corrections, optional paraphrasing of audited verbatim target-option cases, and any additional split definitions will be posted as new versions; the Croissant version field is bumped on every release. The current artifact is the anonymous review version.",
+  "prov:wasDerivedFrom": [
+    {
+      "@type": "sc:Dataset",
+      "name": "MAD / MAD-eval",
+      "citation": "Soldan et al., MAD: A Scalable Dataset for Language Grounding in Videos From Movie Audio Descriptions, CVPR 2022",
+      "url": "https://openaccess.thecvf.com/content/CVPR2022/html/Soldan_MAD_A_Scalable_Dataset_for_Language_Grounding_in_Videos_From_CVPR_2022_paper.html",
+      "license": "Original MAD/MAD-eval and underlying movie source assets remain governed by their original providers' terms and are not redistributed in this release."
+    }
+  ],
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "qna-test-jsonl",
+      "name": "qna_test.jsonl",
+      "description": "Public no-answer benchmark file. One JSON object per line. 787 items.",
+      "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/data/qna_test.jsonl",
+      "encodingFormat": "application/jsonl",
+      "sha256": "602a0028be504a3ec171e56b7e074600c7310b9ec0d4377b5c2bee935f8b0c0a",
+      "contentSize": 566785
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "qna-with-answers-jsonl",
+      "name": "qna_with_answers.jsonl",
+      "description": "Answer-bearing scoring file. One JSON object per line. 787 items, each with the answer key and clean audit fields. Same item ids as qna_test.jsonl.",
+      "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/data/qna_with_answers.jsonl",
+      "encodingFormat": "application/jsonl",
+      "sha256": "6106878053fef822bbe2fcdbacff15ebcd49f0de806daafa8593b6fecae5efc3",
+      "contentSize": 999024
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "schema-md",
+      "name": "schema.md",
+      "description": "Human-readable field-by-field schema for both JSONL files.",
+      "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/schema.md",
+      "encodingFormat": "text/markdown",
+      "sha256": "06c0f4f16baebebd50502538cf650e562b140c2f48f0cb6df7176dfc3a2ae91b",
+      "contentSize": 2038
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "readme-md",
+      "name": "README.md",
+      "description": "Dataset card.",
+      "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/README.md",
+      "encodingFormat": "text/markdown",
+      "sha256": "0472403badd9ccceaa969f28382ef6a2bac779619d72a3b75ab050acf46485a8",
+      "contentSize": 7440
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "teaser-png",
+      "name": "teaser.png",
+      "description": "Paper teaser figure illustrating the prospective AD-QA setup: the answerer uses prior AD while the future Target AD is withheld.",
+      "encodingFormat": "image/png",
+      "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/assets/teaser.png",
+      "sha256": "dd2a5f7a0e4eba344c725e423c0f877dc6a798216392f308a9b59c6fb8c900c5",
+      "contentSize": 1682787
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "data-pipeline-png",
+      "name": "data_pipeline.png",
+      "description": "Construction pipeline figure showing source AD streams, target/evidence selection, MCQ generation, validation, and release files.",
+      "encodingFormat": "image/png",
+      "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/assets/data_pipeline.png",
+      "sha256": "501ce65d02d23c87b0157bc46d61854487d4e1b64c35236dc6ee378ed2921319",
+      "contentSize": 709244
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "license-md",
+      "name": "LICENSE.md",
+      "description": "Review access terms for the ForSeeBench dataset artifact.",
+      "encodingFormat": "text/markdown",
+      "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/LICENSE.md",
+      "sha256": "60e440442903ce08dcbefd752cc3b79b27fd27bd0be84e72601d460a9c2f4fc8",
+      "contentSize": 912
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "public_examples",
+      "name": "public_examples",
+      "description": "One record per benchmark item in the public no-answer file. The answer key is intentionally absent.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/id",
+          "name": "id",
+          "description": "Stable benchmark item id of the form lsmdc::<MOVIE>::block::<startidx>_<endidx>::w10::<target_clip_id>.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/source_id",
+          "name": "source_id",
+          "description": "MAD-eval movie identifier (release-safe folder name).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.source_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/prior_context",
+          "name": "prior_context",
+          "description": "JSON array of prior AD clips visible to the answerer. Each element is an object with keys 'clip_id' (string) and 'text' (string). Encoded as JSON within a text field; consumers should parse it.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.prior_context"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/question",
+          "name": "question",
+          "description": "Multiple-choice question about the hidden future AD target.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.question"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/options",
+          "name": "options",
+          "description": "JSON array of exactly four answer options (strings).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.options"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/question_type",
+          "name": "question_type",
+          "description": "Controlled question type label (e.g., what_happens_next, what_is_revealed_next, what_changes_next, what_text_appears_next).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.question_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/target_type",
+          "name": "target_type",
+          "description": "Controlled target type label: action_transition, state_change, participant_update, spatial_consequence, object_reveal, or visible_text_update.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.target_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/context_length",
+          "name": "context_length",
+          "description": "Number of selected adaptive prior-context clips for this item.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.context_length"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "public_examples/expectedness",
+          "name": "expectedness",
+          "description": "Optional Qwen-judged scalar in [0, 1] describing how strongly the prior context narrows the future event. Diagnostic; not used as a hard filter in the released benchmark.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "qna-test-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.expectedness"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "answer_bearing_examples",
+      "name": "answer_bearing_examples",
+      "description": "One record per benchmark item in the answer-bearing scoring file. Item ids match public_examples; this file additionally provides the answer key, the hidden target AD, evidence spans, and distractor labels for evaluation and audit.",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/id",
+          "name": "id",
+          "description": "Stable benchmark item id; matches public_examples/id.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/source_id",
+          "name": "source_id",
+          "description": "MAD-eval movie identifier.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.source_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/prior_context",
+          "name": "prior_context",
+          "description": "JSON array of prior AD clips. Elements are objects with keys 'clip_id' and 'text'. Same as public_examples/prior_context.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.prior_context"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/question",
+          "name": "question",
+          "description": "Multiple-choice question about the hidden future AD target.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.question"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/options",
+          "name": "options",
+          "description": "JSON array of exactly four answer options (strings).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.options"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/question_type",
+          "name": "question_type",
+          "description": "Controlled question type label.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.question_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/target_type",
+          "name": "target_type",
+          "description": "Controlled target type label.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.target_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/context_length",
+          "name": "context_length",
+          "description": "Number of selected adaptive prior-context clips.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.context_length"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/expectedness",
+          "name": "expectedness",
+          "description": "Optional Qwen-judged scalar in [0, 1].",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.expectedness"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/answer_idx",
+          "name": "answer_idx",
+          "description": "Index of the correct option in `options`, in [0, 3].",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.answer_idx"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/answer_text",
+          "name": "answer_text",
+          "description": "Text of the correct option; equal to options[answer_idx].",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.answer_text"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/hidden_target_ad",
+          "name": "hidden_target_ad",
+          "description": "Withheld future MAD-eval AD sentence used for scoring. Not shown to the answering model in any evaluation condition; provided only in the answer-bearing file for evaluation and reproducibility.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.hidden_target_ad"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/evidence",
+          "name": "evidence",
+          "description": "JSON array of evidence-span objects. Each element has keys 'clip_id' (string) and 'span' (string), where the span is an exact substring of a strictly-prior AD clip that supports the correct answer.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.evidence"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "answer_bearing_examples/distractor_metadata",
+          "name": "distractor_metadata",
+          "description": "JSON array of length 4 aligned with `options`. One element is 'correct'; the other three are typed distractor labels: already_happened, entity_swapped, plausible_unsupported, contradicts_context, or unrelated.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "qna-with-answers-jsonl"
+            },
+            "extract": {
+              "jsonPath": "$.distractor_metadata"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "dateModified": "2026-05-07",
+  "rai:syntheticDataDescription": "Questions, answer options, distractors, target/reasoning metadata, expectedness scores, and validation scores are produced by Qwen2.5-VL-7B-Instruct under fixed prompts. Prior context and hidden target AD text are derived from MAD/MAD-eval human-written audio descriptions and are not synthetic.",
+  "prov:wasGeneratedBy": [
+    {
+      "@type": "prov:Activity",
+      "name": "MAD-eval AD parsing and regioning",
+      "description": "Ordered MAD-eval AD clips are parsed per movie and converted into overlapping 10-clip candidate regions. Raw movie media, audio, subtitles, and full source assets are not redistributed."
+    },
+    {
+      "@type": "prov:Activity",
+      "name": "Qwen target and evidence selection",
+      "description": "Qwen2.5-VL-7B-Instruct selects a concrete hidden future AD target and strictly prior evidence-bearing context clips from each candidate region."
+    },
+    {
+      "@type": "prov:Activity",
+      "name": "Qwen MCQ generation",
+      "description": "Qwen2.5-VL-7B-Instruct generates one four-option multiple-choice question from the selected target and prior evidence, including a target-grounded correct option and typed distractors."
+    },
+    {
+      "@type": "prov:Activity",
+      "name": "Validation and filtering",
+      "description": "Candidates are retained only when strict JSON validation succeeds and Qwen validation scores meet thresholds for answerability confidence, evidence sufficiency, and distractor quality."
+    },
+    {
+      "@type": "prov:Activity",
+      "name": "Release export",
+      "description": "The retained 787 items are exported into qna_test.jsonl without answers and qna_with_answers.jsonl with answer keys and audit fields."
+    }
+  ],
+  "image": [
+    "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/assets/teaser.png",
+    "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/assets/data_pipeline.png"
+  ]
+}

@@ -24,7 +24,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", default="data/processed/all_movies/eval_all10.jsonl")
     parser.add_argument("--results-csv", default="Results.csv")
-    parser.add_argument("--output-dir", default="outputs/evaluation/predicc/all_10_movies_run")
+    parser.add_argument("--output-dir", default="outputs/evaluation/predicc/all_10_movies_run_fixed_k0")
     parser.add_argument("--qwen-config", default="configs/qwen.yaml")
     parser.add_argument("--ad-columns", nargs="+", default=["AutoAD-Zero", "NarrAD"])
     parser.add_argument("--context-lengths", default="0,1,2,4,8")

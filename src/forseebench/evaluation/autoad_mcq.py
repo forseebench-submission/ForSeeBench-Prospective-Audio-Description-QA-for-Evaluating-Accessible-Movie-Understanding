@@ -113,11 +113,27 @@ def materialize_autoad_context(
     """Return generated AD context sentences plus any unmatched source clips."""
 
     return materialize_generated_context_clips(
-        example.get("context", []),
+        selected_prior_context_clips(example),
         index,
         text_index=text_index,
         tolerance=tolerance,
     )
+
+
+def selected_prior_context_clips(example: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return selected adaptive context clips that strictly precede the hidden target."""
+
+    clips = list(example.get("context", []))
+    target_sequence_index = (example.get("target") or {}).get("sequence_index")
+    if target_sequence_index is None:
+        return clips
+    target_sequence_index = int(target_sequence_index)
+    return [
+        clip
+        for clip in clips
+        if clip.get("sequence_index") is None
+        or int(clip["sequence_index"]) < target_sequence_index
+    ]
 
 
 def materialize_generated_context_clips(
@@ -243,20 +259,34 @@ def make_mcq_prompt(
     example: dict[str, Any],
     generated_context: list[str],
     *,
-    source_name: str,
+    source_name: str | None,
     option_order: list[int] | None = None,
 ) -> str:
     if option_order is None:
         option_order = list(range(len(example["options"])))
     displayed_options = [example["options"][original_idx] for original_idx in option_order]
     options = "\n".join(f"{idx}. {option}" for idx, option in enumerate(displayed_options))
+    if not generated_context:
+        return f"""You are answering a multiple-choice question about what happens next in a movie.
+
+Choose the best answer.
+
+Question:
+{example["question"]}
+
+Options:
+{options}
+
+Return strict JSON with keys "prediction_idx" and "prediction_text".
+"prediction_idx" must be one of 0, 1, 2, or 3.
+"prediction_text" must exactly match the selected option.
+"""
     context = "\n".join(f"{idx + 1}. {sentence}" for idx, sentence in enumerate(generated_context))
     return f"""You are answering a multiple-choice question about what happens next in a movie.
 
-Use only the provided prior {source_name} audio descriptions. The future target description is hidden.
-Choose the best option from 0, 1, 2, or 3.
+Base your answer on the prior audio descriptions below. First identify which answer option is best supported by the prior descriptions, then return only the final JSON answer.
 
-Prior {source_name} audio descriptions:
+Prior audio descriptions:
 {context}
 
 Question:
@@ -265,8 +295,9 @@ Question:
 Options:
 {options}
 
-Return only strict JSON with this schema:
-{{"id": "{example["id"]}", "prediction_idx": 0, "prediction_text": "exact option text"}}
+Return strict JSON with keys "prediction_idx" and "prediction_text".
+"prediction_idx" must be one of 0, 1, 2, or 3.
+"prediction_text" must exactly match the selected option.
 """
 
 
@@ -321,7 +352,7 @@ def _evaluate_examples_with_contexts(
     contexts_by_id: dict[str, list[str]],
     output_dir: str | Path,
     qwen_client: QwenClient | None,
-    source_name: str,
+    source_name: str | None,
     dry_run_prompts: int = 0,
     shuffle_options: bool = True,
     run_name: str = "answer_autoad_mcq",
@@ -433,7 +464,7 @@ def _prediction_row_from_raw_text(
     example: dict[str, Any],
     option_order: list[int],
     raw_text: str,
-    source_name: str,
+    source_name: str | None,
     context_length: int,
     run_name: str,
 ) -> dict[str, Any]:
@@ -482,7 +513,7 @@ def _prediction_row_from_qwen_call(
     example: dict[str, Any],
     option_order: list[int],
     prompt: str,
-    source_name: str,
+    source_name: str | None,
     context_length: int,
     run_name: str,
 ) -> dict[str, Any]:
@@ -547,18 +578,23 @@ def summarize_predicc(
     metrics_by_source_and_k: dict[str, dict[int, dict[str, Any]]],
     *,
     oracle_accuracy: float | None = None,
+    shared_acc0_metrics: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compute PrediCC@k and optional normalized PrediCC from accuracy rows."""
 
     summary: dict[str, Any] = {"sources": {}, "oracle_accuracy": oracle_accuracy}
     for source, by_k in metrics_by_source_and_k.items():
-        if 0 not in by_k:
+        if shared_acc0_metrics is None and 0 not in by_k:
             raise KeyError(f"source {source!r} is missing k=0 metrics")
-        acc0 = float(by_k[0]["accuracy"])
+        acc0_row = shared_acc0_metrics or by_k[0]
+        acc0 = float(acc0_row["accuracy"])
         rows: list[dict[str, Any]] = []
         normalized_values: list[float] = []
-        for k in sorted(by_k):
-            acc = float(by_k[k]["accuracy"])
+        metric_rows = dict(by_k)
+        if shared_acc0_metrics is not None:
+            metric_rows[0] = shared_acc0_metrics
+        for k in sorted(metric_rows):
+            acc = float(metric_rows[k]["accuracy"])
             predicc = acc - acc0
             row = {
                 "k": k,
@@ -566,10 +602,12 @@ def summarize_predicc(
                 "accuracy_percent": 100.0 * acc,
                 "predicc": predicc,
                 "predicc_points": 100.0 * predicc,
-                "num_correct": by_k[k].get("num_correct"),
-                "num_examples": by_k[k].get("num_examples"),
-                "num_invalid_predictions": by_k[k].get("num_invalid_predictions"),
+                "num_correct": metric_rows[k].get("num_correct"),
+                "num_examples": metric_rows[k].get("num_examples"),
+                "num_invalid_predictions": metric_rows[k].get("num_invalid_predictions"),
             }
+            if k == 0 and shared_acc0_metrics is not None:
+                row["shared_no_context"] = True
             if oracle_accuracy is not None and oracle_accuracy != acc0:
                 normalized = predicc / (oracle_accuracy - acc0)
                 row["normalized_predicc"] = normalized
@@ -578,6 +616,7 @@ def summarize_predicc(
             rows.append(row)
         source_summary: dict[str, Any] = {
             "acc0": acc0,
+            "shared_acc0": shared_acc0_metrics is not None,
             "rows": rows,
         }
         if normalized_values:
@@ -614,6 +653,39 @@ def evaluate_predicc_mcq(
 
     metrics_by_source_and_k: dict[str, dict[int, dict[str, Any]]] = {}
     unmatched_rows: list[dict[str, Any]] = []
+    shared_acc0_metrics: dict[str, Any] | None = None
+    context_lengths_set = {int(k) for k in context_lengths}
+
+    if 0 in context_lengths_set:
+        contexts_by_id = {example["id"]: [] for example in all_examples}
+        shared_acc0_metrics = _evaluate_examples_with_contexts(
+            examples=all_examples,
+            contexts_by_id=contexts_by_id,
+            output_dir=output_path / "no_context" / "k_0",
+            qwen_client=qwen_client,
+            source_name=None,
+            dry_run_prompts=dry_run_prompts,
+            shuffle_options=shuffle_options,
+            run_name="answer_predicc_no_context_k0",
+            batch_size=batch_size,
+        )
+        shared_acc0_metrics.update(
+            {
+                "dataset_path": str(dataset_path),
+                "results_csv": str(results_csv),
+                "ad_column": None,
+                "context_length_k": 0,
+                "num_total_examples": len(all_examples),
+                "num_unmatched_examples": 0,
+                "context_protocol": "source_neutral_no_context",
+                "shared_no_context": True,
+            }
+        )
+        (output_path / "no_context" / "k_0" / "metrics.json").write_text(
+            json.dumps(shared_acc0_metrics, indent=2, sort_keys=True),
+            encoding="utf-8",
+        )
+
     for ad_column in ad_columns:
         generated_rows = load_generated_ad_rows(results_csv, column=ad_column)
         index = build_generated_ad_index(generated_rows)
@@ -621,6 +693,11 @@ def evaluate_predicc_mcq(
         metrics_by_source_and_k[ad_column] = {}
 
         for k in context_lengths:
+            if int(k) == 0:
+                if shared_acc0_metrics is None:
+                    raise RuntimeError("shared no-context metrics were not computed")
+                metrics_by_source_and_k[ad_column][0] = shared_acc0_metrics
+                continue
             contexts_by_id: dict[str, list[str]] = {}
             evaluated_examples: list[dict[str, Any]] = []
             for example in all_examples:
@@ -675,7 +752,11 @@ def evaluate_predicc_mcq(
             metrics_by_source_and_k[ad_column][int(k)] = metrics
 
     write_jsonl(output_path / "unmatched.jsonl", unmatched_rows)
-    summary = summarize_predicc(metrics_by_source_and_k, oracle_accuracy=oracle_accuracy)
+    summary = summarize_predicc(
+        metrics_by_source_and_k,
+        oracle_accuracy=oracle_accuracy,
+        shared_acc0_metrics=shared_acc0_metrics,
+    )
     summary.update(
         {
             "dataset_path": str(dataset_path),

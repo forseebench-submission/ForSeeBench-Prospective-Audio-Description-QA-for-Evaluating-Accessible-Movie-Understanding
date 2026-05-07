@@ -25,12 +25,14 @@ class Check:
 CHECKS = (
     Check("Root README", ("README.md",)),
     Check(
-        "Hugging Face release draft",
+        "Hugging Face release files",
         (
             "hf_dataset/README.md",
+            "hf_dataset/LICENSE.md",
             "hf_dataset/schema.md",
-            "hf_dataset/croissant_rai_notes.md",
-            "hf_dataset/croissant_metadata_draft.json",
+            "hf_dataset/croissant.json",
+            "hf_dataset/assets/teaser.png",
+            "hf_dataset/assets/data_pipeline.png",
         ),
     ),
     Check(
@@ -70,7 +72,7 @@ CHECKS = (
         ),
     ),
     Check(
-        "Paper draft",
+        "Paper manuscript",
         (
             "paper/69f1681b76d89ed4c70c745c/neurips_2026.tex",
             "paper/69f1681b76d89ed4c70c745c/checklist.tex",
@@ -88,12 +90,12 @@ CHECKS = (
         required=False,
         note="Optional in clean GitHub code artifact; release docs carry the reviewer-facing policy.",
     ),
-    Check("License", ("LICENSE", "LICENSE.md"), required=False, note="TODO(author): final license is unresolved."),
+    Check("License", ("LICENSE.md",), required=False, note="Review access terms are documented in README and LICENSE.md."),
     Check(
         "Dependency file",
-        ("requirements.txt", "pyproject.toml", "environment.yml", "environment.yaml"),
+        ("pyproject.toml",),
         required=False,
-        note="TODO(author): full dependency pinning is unresolved.",
+        note="pyproject.toml covers the lightweight release scripts.",
     ),
 )
 
@@ -228,11 +230,14 @@ def main() -> int:
     failures = 0
     for check in CHECKS:
         status, existing, missing = status_for(check.paths)
+        display_status = status
+        if not check.required and status == "MISSING":
+            display_status = "OPTIONAL"
         if check.required and status != "PASS":
             failures += 1
         detail = f"{check.label}: {len(existing)}/{len(check.paths)} present"
-        print(f"{status} {detail}")
-        if missing:
+        print(f"{display_status} {detail}")
+        if missing and check.required:
             print("  missing: " + ", ".join(missing))
         if check.note:
             print(f"  note: {check.note}")

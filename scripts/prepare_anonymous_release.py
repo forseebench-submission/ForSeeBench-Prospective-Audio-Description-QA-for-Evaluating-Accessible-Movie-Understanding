@@ -59,12 +59,13 @@ ALLOWED_DIRS = (
 )
 ALLOWED_HF_FILES = (
     "hf_dataset/README.md",
+    "hf_dataset/LICENSE.md",
     "hf_dataset/schema.md",
-    "hf_dataset/croissant_rai_notes.md",
-    "hf_dataset/croissant_metadata_draft.json",
+    "hf_dataset/croissant.json",
 )
 ALLOWED_HF_DIRS = (
     "hf_dataset/data",
+    "hf_dataset/assets",
 )
 ALLOWED_AGENT_FILES = (
     "agent/submission_readiness_audit.md",
