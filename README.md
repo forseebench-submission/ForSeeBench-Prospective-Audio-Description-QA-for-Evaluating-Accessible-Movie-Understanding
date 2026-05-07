@@ -1,4 +1,4 @@
-# ForSeeBench: Prospective Audio-Description QA for Evaluating Accessible Movie Understanding
+# ForSeeBench: Evaluating How Audio Description Context Supports Future Understanding
 
 [![Dataset](https://img.shields.io/badge/Hugging%20Face-Dataset-ffcc00)](https://huggingface.co/datasets/forseebench/forseebench)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue)](pyproject.toml)
