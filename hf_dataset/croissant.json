@@ -1,6 +1,7 @@
 {
   "@context": {
     "@vocab": "https://schema.org/",
+    "@language": "en",
     "cr": "http://mlcommons.org/croissant/",
     "dct": "http://purl.org/dc/terms/",
     "rai": "http://mlcommons.org/croissant/RAI/",
@@ -12,7 +13,10 @@
   "alternateName": "ForSeeBench: Prospective Audio-Description QA for Evaluating Accessible Movie Understanding",
   "description": "Evaluation benchmark for prospective audio-description (AD) question answering. Each item gives prior AD context, a four-option multiple-choice question, and a withheld future human-written AD target. The task tests whether prior AD preserves evidence that supports inference about the next narrated visual update. Public rows omit the answer key; answer-bearing rows add scoring labels and clean audit metadata. The benchmark is derived from MAD-eval audio descriptions and contains 787 items across 10 movies. The release also includes the paper teaser and construction-pipeline figures. This release is an evaluation benchmark and is not intended as a training corpus.",
   "conformsTo": "http://mlcommons.org/croissant/1.1",
-  "dct:conformsTo": "http://mlcommons.org/croissant/RAI/1.0",
+  "dct:conformsTo": [
+    "http://mlcommons.org/croissant/1.1",
+    "http://mlcommons.org/croissant/RAI/1.0"
+  ],
   "url": "https://huggingface.co/datasets/forseebench/forseebench",
   "license": "https://huggingface.co/datasets/forseebench/forseebench/blob/main/LICENSE.md",
   "sc:license": "https://huggingface.co/datasets/forseebench/forseebench/blob/main/LICENSE.md",
@@ -80,7 +84,7 @@
       "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/data/qna_test.jsonl",
       "encodingFormat": "application/jsonl",
       "sha256": "602a0028be504a3ec171e56b7e074600c7310b9ec0d4377b5c2bee935f8b0c0a",
-      "contentSize": 566785
+      "contentSize": "566785"
     },
     {
       "@type": "cr:FileObject",
@@ -90,7 +94,7 @@
       "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/data/qna_with_answers.jsonl",
       "encodingFormat": "application/jsonl",
       "sha256": "6106878053fef822bbe2fcdbacff15ebcd49f0de806daafa8593b6fecae5efc3",
-      "contentSize": 999024
+      "contentSize": "999024"
     },
     {
       "@type": "cr:FileObject",
@@ -100,7 +104,7 @@
       "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/schema.md",
       "encodingFormat": "text/markdown",
       "sha256": "06c0f4f16baebebd50502538cf650e562b140c2f48f0cb6df7176dfc3a2ae91b",
-      "contentSize": 2038
+      "contentSize": "2038"
     },
     {
       "@type": "cr:FileObject",
@@ -110,7 +114,7 @@
       "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/README.md",
       "encodingFormat": "text/markdown",
       "sha256": "0472403badd9ccceaa969f28382ef6a2bac779619d72a3b75ab050acf46485a8",
-      "contentSize": 7440
+      "contentSize": "7440"
     },
     {
       "@type": "cr:FileObject",
@@ -120,7 +124,7 @@
       "encodingFormat": "image/png",
       "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/assets/teaser.png",
       "sha256": "dd2a5f7a0e4eba344c725e423c0f877dc6a798216392f308a9b59c6fb8c900c5",
-      "contentSize": 1682787
+      "contentSize": "1682787"
     },
     {
       "@type": "cr:FileObject",
@@ -130,7 +134,7 @@
       "encodingFormat": "image/png",
       "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/assets/data_pipeline.png",
       "sha256": "501ce65d02d23c87b0157bc46d61854487d4e1b64c35236dc6ee378ed2921319",
-      "contentSize": 709244
+      "contentSize": "709244"
     },
     {
       "@type": "cr:FileObject",
@@ -140,7 +144,7 @@
       "encodingFormat": "text/markdown",
       "contentUrl": "https://huggingface.co/datasets/forseebench/forseebench/resolve/main/LICENSE.md",
       "sha256": "60e440442903ce08dcbefd752cc3b79b27fd27bd0be84e72601d460a9c2f4fc8",
-      "contentSize": 912
+      "contentSize": "912"
     }
   ],
   "recordSet": [

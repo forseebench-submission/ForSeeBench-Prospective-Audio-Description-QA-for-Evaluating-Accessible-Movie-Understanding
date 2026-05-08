@@ -141,7 +141,15 @@ def validate(payload: dict[str, Any]) -> list[str]:
                         f"distribution[{index}] sha256 mismatch for {local_path.relative_to(ROOT)}: "
                         f"{expected_hash} != {actual_hash}"
                     )
-                if expected_size != actual_size:
+                try:
+                    expected_size_int = int(expected_size)
+                except (TypeError, ValueError):
+                    errors.append(
+                        f"distribution[{index}] contentSize must be a byte-count string for "
+                        f"{local_path.relative_to(ROOT)}: {expected_size}"
+                    )
+                    expected_size_int = None
+                if expected_size_int is not None and expected_size_int != actual_size:
                     errors.append(
                         f"distribution[{index}] contentSize mismatch for {local_path.relative_to(ROOT)}: "
                         f"{expected_size} != {actual_size}"
