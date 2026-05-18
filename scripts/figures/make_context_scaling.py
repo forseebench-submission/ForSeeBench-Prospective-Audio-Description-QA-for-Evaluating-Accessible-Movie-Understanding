@@ -144,7 +144,7 @@ def plot(rows: list[dict[str, object]], pdf_path: Path, png_path: Path) -> None:
 
     fig, ax_acc = plt.subplots(figsize=(5.2, 3.35))
 
-    fig.subplots_adjust(left=0.14, right=0.96, bottom=0.18, top=0.88)
+    fig.subplots_adjust(left=0.14, right=0.96, bottom=0.23, top=0.88)
 
     fig.suptitle(
         "Fixed-Window Context Contribution",
@@ -194,7 +194,7 @@ def plot(rows: list[dict[str, object]], pdf_path: Path, png_path: Path) -> None:
     ax_acc.legend(
         frameon=False,
         loc="lower left",
-        bbox_to_anchor=(0.02, 0.02),
+        bbox_to_anchor=(0.02, -0.03),
         handlelength=1.5,
     )
 
