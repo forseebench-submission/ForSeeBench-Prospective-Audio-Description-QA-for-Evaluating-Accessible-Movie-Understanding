@@ -19,17 +19,27 @@ LABELS = {
     "autoad_zero": "AutoAD-Zero",
     "NarrAD": "NarrAD",
     "narrad": "NarrAD",
+    "StoryTeller_V1": "StoryTeller V1",
+    "storyteller_v1": "StoryTeller V1",
+    "StoryTeller V1": "StoryTeller V1",
+    "StoryTeller_V2": "StoryTeller",
+    "storyteller_v2": "StoryTeller",
+    "StoryTeller V2": "StoryTeller",
+    "StoryTeller": "StoryTeller",
 }
-SOURCE_ORDER = ["MAD-eval Human AD", "NarrAD", "AutoAD-Zero"]
+EXCLUDED_SOURCES = {"StoryTeller V1"}
+SOURCE_ORDER = ["MAD-eval Human AD", "NarrAD", "AutoAD-Zero", "StoryTeller"]
 COLORS = {
     "MAD-eval Human AD": "#4E79A7",
     "NarrAD": "#59A14F",
     "AutoAD-Zero": "#E15759",
+    "StoryTeller": "#F28E2B",
 }
 MARKERS = {
     "MAD-eval Human AD": "o",
     "NarrAD": "s",
     "AutoAD-Zero": "^",
+    "StoryTeller": "v",
 }
 
 
@@ -40,13 +50,16 @@ def load_summary(path: Path) -> dict:
 
 
 def normalize_source(source: str, payload: dict) -> str:
-    return payload.get("label") or LABELS.get(source, source)
+    label = payload.get("label") or source
+    return LABELS.get(label, label)
 
 
 def rows_from_summary(summary: dict) -> list[dict[str, object]]:
     rows: list[dict[str, object]] = []
     for source, payload in summary.get("sources", {}).items():
         label = normalize_source(source, payload)
+        if label in EXCLUDED_SOURCES:
+            continue
         for row in payload.get("rows", []):
             rows.append(
                 {
@@ -84,6 +97,29 @@ def write_csv(rows: list[dict[str, object]], path: Path) -> None:
         writer.writerows(sorted(rows, key=lambda r: (order.get(str(r["source"]), 99), int(r["k"]))))
 
 
+def read_csv(path: Path) -> list[dict[str, object]]:
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        rows = []
+        for row in reader:
+            source = LABELS.get(row["source"], row["source"])
+            if source in EXCLUDED_SOURCES:
+                continue
+            rows.append(
+                {
+                    "source": source,
+                    "source_key": row["source_key"],
+                    "k": int(row["k"]),
+                    "accuracy_percent": float(row["accuracy_percent"]),
+                    "predicc_points": float(row["predicc_points"]),
+                    "num_examples": int(row["num_examples"]),
+                    "num_correct": int(row["num_correct"]),
+                    "num_invalid_predictions": int(row.get("num_invalid_predictions") or 0),
+                }
+            )
+        return rows
+
+
 def plot(rows: list[dict[str, object]], pdf_path: Path, png_path: Path) -> None:
     sources = sorted(
         {str(row["source"]) for row in rows},
@@ -106,7 +142,7 @@ def plot(rows: list[dict[str, object]], pdf_path: Path, png_path: Path) -> None:
         }
     )
 
-    fig, ax_acc = plt.subplots(figsize=(3.8, 3.2))
+    fig, ax_acc = plt.subplots(figsize=(5.2, 3.35))
 
     fig.subplots_adjust(left=0.14, right=0.96, bottom=0.18, top=0.88)
 
@@ -173,15 +209,19 @@ def plot(rows: list[dict[str, object]], pdf_path: Path, png_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--input-csv", default=None, help="Plot rows from an existing CSV instead of a summary JSON.")
     parser.add_argument("--summary", default="outputs/evaluation/predicc/all_10_movies_run_fixed_k0/predicc_summary.json")
     parser.add_argument("--csv", default="figures/context_scaling_data.csv")
     parser.add_argument("--pdf", default="figures/context_scaling.pdf")
     parser.add_argument("--png", default="figures/context_scaling.png")
     args = parser.parse_args()
 
-    summary = load_summary(Path(args.summary))
-    rows = rows_from_summary(summary)
-    write_csv(rows, Path(args.csv))
+    if args.input_csv:
+        rows = read_csv(Path(args.input_csv))
+    else:
+        summary = load_summary(Path(args.summary))
+        rows = rows_from_summary(summary)
+        write_csv(rows, Path(args.csv))
     plot(rows, Path(args.pdf), Path(args.png))
 
 
